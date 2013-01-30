@@ -1,4 +1,4 @@
-package com.fbsdata.spark.api;
+package com.sparkplatform.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -10,10 +10,6 @@ import org.apache.log4j.Logger;
 
 import android.util.Log;
 
-import com.flexmls.flexmls_api.Client;
-import com.flexmls.flexmls_api.Configuration;
-import com.flexmls.flexmls_api.Connection;
-import com.flexmls.flexmls_api.Response;
 
 public class SparkClient extends Client {
 

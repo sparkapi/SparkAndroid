@@ -1,10 +1,8 @@
-package com.fbsdata.spark.api;
+package com.sparkplatform.api;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.flexmls.flexmls_api.FlexmlsApiClientException;
-import com.flexmls.flexmls_api.Session;
 
 @JsonIgnoreProperties({"expires_in"})
 

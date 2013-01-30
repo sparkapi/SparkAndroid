@@ -15,11 +15,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.fbsdata.spark.api.SparkClient;
-import com.flexmls.flexmls_api.ApiParameter;
-import com.flexmls.flexmls_api.FlexmlsApiClientException;
-import com.flexmls.flexmls_api.Response;
-import com.flexmls.flexmls_api.models.Listing;
+import com.sparkplatform.api.ApiParameter;
+import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.Response;
+import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.models.Listing;
 import com.sparkplatform.utils.ListingFormatter;
 
 public class ViewListingsActivity extends ListActivity {

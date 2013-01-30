@@ -25,14 +25,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.fbsdata.spark.api.SparkClient;
-import com.fbsdata.spark.api.SparkSession;
-import com.fbsdata.spark.ViewListingsActivity;
-import com.flexmls.flexmls_api.ApiParameter;
-import com.flexmls.flexmls_api.Connection;
-import com.flexmls.flexmls_api.ConnectionApacheHttp;
-import com.flexmls.flexmls_api.FlexmlsApiClientException;
-import com.flexmls.flexmls_api.Response;
+import com.sparkplatform.api.Connection;
+import com.sparkplatform.api.ConnectionApacheHttp;
+import com.sparkplatform.api.Response;
+import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.SparkSession;
 
 public class WebViewActivity extends Activity {
 	

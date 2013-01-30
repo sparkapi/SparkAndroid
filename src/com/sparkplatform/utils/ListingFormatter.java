@@ -3,7 +3,7 @@ package com.sparkplatform.utils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import com.flexmls.flexmls_api.models.Listing;
+import com.sparkplatform.api.models.Listing;
 
 public class ListingFormatter {
 	
