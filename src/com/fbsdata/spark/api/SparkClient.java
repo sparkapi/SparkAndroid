@@ -2,9 +2,13 @@ package com.fbsdata.spark.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.log4j.Logger;
+
+import android.util.Log;
 
 import com.flexmls.flexmls_api.Client;
 import com.flexmls.flexmls_api.Configuration;
@@ -21,12 +25,13 @@ public class SparkClient extends Client {
 	
 	public static final String sparkOpenIdLogoutURL = "https://sparkplatform.com/openid/logout";
 	
-	public static final String sparkAPIEndpoint = "https://sparkapi.com/";
+	public static final String sparkAPIEndpoint = "sparkapi.com";
 	public static final String sparkAPIVersion = "/v1";
 	public static final String sparkOAuth2Grant = "/oauth2/grant";
 	
 	// class vars *************************************************************
 	
+	private static final String TAG = "SparkClient";
 	private static Logger logger = Logger.getLogger(SparkClient.class);
 	
 	// constructors ***********************************************************
@@ -71,8 +76,23 @@ public class SparkClient extends Client {
 
 	public static String getSparkOAuth2GrantString()
 	{
-		return sparkAPIEndpoint + sparkAPIVersion + sparkOAuth2Grant;
+		return "https://" + sparkAPIEndpoint + sparkAPIVersion + sparkOAuth2Grant;
 	}
+	
+	/*
+	public static boolean hybridAuthenticate(String url, SparkClient sparkClient)
+		throws SparkException
+	{
+		
+	}
+	
+	public static boolean openIdAuthenticate(String url, SparkClient sparkClient)
+		throws SparkException
+	{
+		
+	}
+	*/
+	
 	
 	public static void initSparkHeader(HttpUriRequest httpRequest)
 	{		
@@ -80,11 +100,30 @@ public class SparkClient extends Client {
 		httpRequest.setHeader("X-SparkApi-User-Agent","DreamCommerce SparkClient 0.1");
 	}
 	
-	/*
-	public boolean hybridAuthenticate(String url, SparkClient sparkClient)
-		// throws SparkException
+	public Map<String,String> getHeaders()
 	{
-		
+		Map<String,String> headers = new HashMap<String,String>();
+		headers.put("User-Agent", "DreamCommerce Spark Java API 0.1");
+		headers.put("X-SparkApi-User-Agent", "DreamCommerce SparkClient 0.1");
+		if(getSession() != null)
+			headers.put("Authorization", "OAuth " + ((SparkSession)getSession()).getAccessToken());
+		return headers;
 	}
-	*/
+	
+	protected String requestPath(String path, Map<String, String> params) {
+		StringBuilder b = new StringBuilder();
+		b.append("/").append(getConfig().getVersion()).append(path).append("?");
+		for (String key : params.keySet()) {
+			b.append("&").append(key).append("=").append(encode(params.get(key)));
+		}
+		Log.d(TAG, "requestPath>" + b.toString());
+		return b.toString();
+	}
+	
+	protected String setupRequest(String path, String body, Map<String, String> options) {
+		Map<String, String> params = new HashMap<String,String>();
+		params.putAll(options);
+		return requestPath(path, params);
+	}
+	
 }

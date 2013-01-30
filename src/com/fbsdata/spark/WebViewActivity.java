@@ -27,7 +27,12 @@ import android.webkit.WebViewClient;
 
 import com.fbsdata.spark.api.SparkClient;
 import com.fbsdata.spark.api.SparkSession;
+import com.flexmls.flexmls_api.ApiParameter;
 import com.flexmls.flexmls_api.Configuration;
+import com.flexmls.flexmls_api.Connection;
+import com.flexmls.flexmls_api.ConnectionApacheHttp;
+import com.flexmls.flexmls_api.FlexmlsApiClientException;
+import com.flexmls.flexmls_api.Response;
 
 public class WebViewActivity extends Activity {
 	
@@ -58,7 +63,9 @@ public class WebViewActivity extends Activity {
 		webView.setWebViewClient(new SparkWebViewClient());
 		
 	    Configuration c = new Configuration();
-	    c.setApiKey("cx8re5r5jqh5w2uqbxg7aymb8");
+	    c.setApiKey(SparkClient.sparkClientKey);
+	    c.setEndpoint(SparkClient.sparkAPIEndpoint);
+	    c.setSsl(true);
 	    this.sparkClient = new SparkClient(c);
 	    String loginURL = sparkClient.getSparkHybridOpenIdURLString();
 		webView.loadUrl(loginURL);
@@ -107,6 +114,10 @@ public class WebViewActivity extends Activity {
 				   				   
 		    	   return true;
 		       }
+		    else
+		    {
+		    	
+		    }
 
 			return false;
 		}
@@ -136,6 +147,26 @@ public class WebViewActivity extends Activity {
 				   String responseBody = EntityUtils.toString(response.getEntity());
 				   Log.d(TAG, "OAuth2 response>" + responseBody);
 				   sparkSession = mapper.readValue(responseBody, SparkSession.class);
+				   sparkClient.setSession(sparkSession);
+				   Connection<Response> connection = sparkClient.getConnection();
+				   ((ConnectionApacheHttp)connection).setHeaders(sparkClient.getHeaders());
+				   
+				   Map<ApiParameter,String> parameters = new HashMap<ApiParameter,String>();
+				   parameters.put(ApiParameter._limit, "50");
+				   parameters.put(ApiParameter._expand, "PrimaryPhoto");
+				   parameters.put(ApiParameter._select, "ListingId,StreetNumber,StreetDirPrefix,StreetName,StreetDirSuffix,StreetSuffix,BedsTotal,BathsTotal,ListPrice,City,StateOrProvince");
+				   parameters.put(ApiParameter._filter, "PropertyType Eq 'A'");
+				   parameters.put(ApiParameter._orderby, "-ListPrice");
+
+				   try
+				   {
+					   Response r = sparkClient.get("/listings",parameters);
+					   Log.d(TAG, "success>" + r.isSuccess());
+				   }
+				   catch(FlexmlsApiClientException e)
+				   {
+					   Log.e(TAG, "/listings exception>", e);
+				   }
 			   } 
 			   catch (Exception e)
 			   {
@@ -146,7 +177,8 @@ public class WebViewActivity extends Activity {
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {
-	    	 sparkClient.setSession(sparkSession);
+	    	 // TODO: set spark client on Application object
+	    	 // TODO: close web view
 	     }
 	 }
 }
