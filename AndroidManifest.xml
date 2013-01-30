@@ -9,7 +9,7 @@
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -31,6 +31,10 @@
         <activity
             android:name="com.fbsdata.spark.WebViewActivity"
             android:label="@string/title_activity_web_view" >
+        </activity>
+        <activity
+            android:name="com.fbsdata.spark.ViewListingsActivity"
+            android:label="@string/title_activity_view_listings" >
         </activity>
     </application>
 

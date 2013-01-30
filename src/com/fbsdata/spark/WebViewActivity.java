@@ -27,8 +27,8 @@ import android.webkit.WebViewClient;
 
 import com.fbsdata.spark.api.SparkClient;
 import com.fbsdata.spark.api.SparkSession;
+import com.fbsdata.spark.ViewListingsActivity;
 import com.flexmls.flexmls_api.ApiParameter;
-import com.flexmls.flexmls_api.Configuration;
 import com.flexmls.flexmls_api.Connection;
 import com.flexmls.flexmls_api.ConnectionApacheHttp;
 import com.flexmls.flexmls_api.FlexmlsApiClientException;
@@ -62,11 +62,7 @@ public class WebViewActivity extends Activity {
 		webSettings.setJavaScriptEnabled(true);
 		webView.setWebViewClient(new SparkWebViewClient());
 		
-	    Configuration c = new Configuration();
-	    c.setApiKey(SparkClient.sparkClientKey);
-	    c.setEndpoint(SparkClient.sparkAPIEndpoint);
-	    c.setSsl(true);
-	    this.sparkClient = new SparkClient(c);
+	    this.sparkClient = SparkClient.getInstance();
 	    String loginURL = sparkClient.getSparkHybridOpenIdURLString();
 		webView.loadUrl(loginURL);
 	    
@@ -177,8 +173,9 @@ public class WebViewActivity extends Activity {
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {
-	    	 // TODO: set spark client on Application object
-	    	 // TODO: close web view
-	     }
+	 	    Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
+	 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    startActivity(intent);	  
+		 }
 	 }
 }

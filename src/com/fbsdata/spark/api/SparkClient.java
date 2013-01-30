@@ -34,13 +34,28 @@ public class SparkClient extends Client {
 	private static final String TAG = "SparkClient";
 	private static Logger logger = Logger.getLogger(SparkClient.class);
 	
-	// constructors ***********************************************************
+	private static SparkClient instance = null;
 	
-	public SparkClient(Configuration config) {
+	// class interface ********************************************************
+
+	public static SparkClient getInstance()
+	{
+		if(instance == null)
+		{
+		    Configuration c = new Configuration();
+		    c.setApiKey(SparkClient.sparkClientKey);
+		    c.setEndpoint(SparkClient.sparkAPIEndpoint);
+		    c.setSsl(true);
+		    instance = new SparkClient(c);
+		}
+		return instance;
+	}
+	
+	private SparkClient(Configuration config) {
 		super(config);
 	}
 	
-	public SparkClient(Configuration config, Connection<Response> defaultConnection, Connection<Response> secureConnection) {
+	private SparkClient(Configuration config, Connection<Response> defaultConnection, Connection<Response> secureConnection) {
 		super(config, defaultConnection, secureConnection);
 	}
 
