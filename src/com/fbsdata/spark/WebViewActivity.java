@@ -146,23 +146,6 @@ public class WebViewActivity extends Activity {
 				   sparkClient.setSession(sparkSession);
 				   Connection<Response> connection = sparkClient.getConnection();
 				   ((ConnectionApacheHttp)connection).setHeaders(sparkClient.getHeaders());
-				   
-				   Map<ApiParameter,String> parameters = new HashMap<ApiParameter,String>();
-				   parameters.put(ApiParameter._limit, "50");
-				   parameters.put(ApiParameter._expand, "PrimaryPhoto");
-				   parameters.put(ApiParameter._select, "ListingId,StreetNumber,StreetDirPrefix,StreetName,StreetDirSuffix,StreetSuffix,BedsTotal,BathsTotal,ListPrice,City,StateOrProvince");
-				   parameters.put(ApiParameter._filter, "PropertyType Eq 'A'");
-				   parameters.put(ApiParameter._orderby, "-ListPrice");
-
-				   try
-				   {
-					   Response r = sparkClient.get("/listings",parameters);
-					   Log.d(TAG, "success>" + r.isSuccess());
-				   }
-				   catch(FlexmlsApiClientException e)
-				   {
-					   Log.e(TAG, "/listings exception>", e);
-				   }
 			   } 
 			   catch (Exception e)
 			   {

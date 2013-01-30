@@ -1,15 +1,50 @@
 package com.fbsdata.spark;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class ViewListingsActivity extends Activity {
+import android.app.ListActivity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import com.fbsdata.spark.api.SparkClient;
+import com.flexmls.flexmls_api.ApiParameter;
+import com.flexmls.flexmls_api.FlexmlsApiClientException;
+import com.flexmls.flexmls_api.Response;
+import com.flexmls.flexmls_api.models.Listing;
+import com.sparkplatform.utils.ListingFormatter;
+
+public class ViewListingsActivity extends ListActivity {
+	
+	private static final String TAG = "ViewListingsActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_listings);
+		
+		   new SearchListingsTask().execute("PropertyType Eq 'A'");
+		   
+		   /*
+	        // Create a progress bar to display while the list loads
+	        ProgressBar progressBar = new ProgressBar(this);
+	        //progressBar.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+	        progressBar.setIndeterminate(true);
+	        getListView().setEmptyView(progressBar);
+
+	        // Must add the progress bar to the root of the layout
+	        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+	        root.addView(progressBar);
+	        */
+
 	}
 
 	@Override
@@ -18,5 +53,62 @@ public class ViewListingsActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_view_listings, menu);
 		return true;
 	}
+	
+    public void onListItemClick(ListView l, View v, int position, long id) {
+    	Log.d(TAG, "ListItem index>" + id);
+    }
 
+	 private class SearchListingsTask extends AsyncTask<String, Void, Response> {
+	     protected Response doInBackground(String... filter) {
+				   
+	    	 Map<ApiParameter,String> parameters = new HashMap<ApiParameter,String>();
+	    	 parameters.put(ApiParameter._limit, "50");
+	    	 parameters.put(ApiParameter._expand, "PrimaryPhoto");
+	    	 parameters.put(ApiParameter._select, "ListingId,StreetNumber,StreetDirPrefix,StreetName,StreetDirSuffix,StreetSuffix,BedsTotal,BathsTotal,ListPrice,City,StateOrProvince");
+	    	 parameters.put(ApiParameter._filter, filter[0]);
+	    	 parameters.put(ApiParameter._orderby, "-ListPrice");
+	    	 
+	    	 Response r = null;
+	    	 try
+	    	 {
+	    		 r = SparkClient.getInstance().get("/listings",parameters);
+	    		 Log.d(TAG, "success>" + r.isSuccess());
+	    	 }
+	    	 catch(FlexmlsApiClientException e)
+	    	 {
+	    		 Log.e(TAG, "/listings exception>", e);
+	    	 }
+	    	 
+	    	 return r;
+	     }
+	     
+	     protected void onPostExecute(Response r) {
+	    	 Log.d(TAG,r.getResultsJSONString());
+	    	 
+	    	 try {
+	    		 List<Listing> listings = r.getResults(Listing.class);
+
+    			 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+	    		 for(Listing l : listings)
+	    		 {
+	    			 Map<String,String> map = new HashMap<String,String>();
+	    			 map.put("line1", ListingFormatter.getListingTitle(l));
+	    			 map.put("line2", ListingFormatter.getListingSubtitle(l));
+	    			 list.add(map);
+	    		 }
+
+	    		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
+	    				 list,
+	    				 android.R.layout.two_line_list_item, 
+	    				 new String[] {"line1", "line2"}, 
+	    				 new int[] {android.R.id.text1, android.R.id.text2});
+	    		 setListAdapter(adapter);
+
+	    	 } catch (FlexmlsApiClientException e) {
+	    		 Log.e(TAG,"Listing JSON binding exception", e);
+	    	 }
+
+		 }
+	 }
+	
 }
