@@ -133,7 +133,8 @@ public class SparkClient extends Client {
 	
 	protected String setupRequest(String path, String body, Map<String, String> options) {
 		Map<String, String> params = new HashMap<String,String>();
-		params.putAll(options);
+		if(options != null)
+			params.putAll(options);
 		return requestPath(path, params);
 	}
 	

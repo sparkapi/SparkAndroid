@@ -8,5 +8,6 @@
     <string name="button_spark">Login with Spark</string>
     <string name="title_activity_web_view">Login</string>
     <string name="title_activity_view_listings">View Listings</string>
+    <string name="title_activity_my_account">My Account</string>
 
 </resources>

@@ -153,7 +153,7 @@ public class WebViewActivity extends Activity {
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {
-	 	    Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
+	 	    Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
 	 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    startActivity(intent);	  
 		 }

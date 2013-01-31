@@ -27,6 +27,9 @@ public class Client extends BaseClient<ApiParameter> {
 	
 	@Override
 	Map<String, String> stringifyParameterKeys(Map<ApiParameter, String> parms) {
+		if(parms == null)
+			return null;
+		
 		Map<String, String> strings = new HashMap<String, String>();
 		for (ApiParameter parm : parms.keySet()) {
 			strings.put(parm.toString(), parms.get(parm));
