@@ -1,4 +1,5 @@
-package com.fbsdata.spark;
+package com.sparkplatform.ui;
+
 
 import android.app.Activity;
 import android.content.Intent;

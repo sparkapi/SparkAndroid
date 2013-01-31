@@ -1,6 +1,6 @@
-package com.fbsdata.spark;
+package com.sparkplatform.ui;
 
-import com.fbsdata.spark.R;
+import com.sparkplatform.ui.R;
 
 import android.os.Bundle;
 import android.app.Activity;

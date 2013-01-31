@@ -1,4 +1,4 @@
-package com.fbsdata.spark;
+package com.sparkplatform.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
