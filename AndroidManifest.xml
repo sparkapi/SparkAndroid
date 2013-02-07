@@ -40,6 +40,10 @@
             android:name="com.sparkplatform.ui.MyAccountActivity"
             android:label="@string/title_activity_my_account" >
         </activity>
+        <activity
+            android:name="com.sparkplatform.ui.ViewListingActivity"
+            android:label="@string/title_activity_view_listing" >
+        </activity>
     </application>
 
 </manifest>

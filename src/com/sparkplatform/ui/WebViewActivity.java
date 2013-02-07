@@ -36,7 +36,6 @@ public class WebViewActivity extends Activity {
 	// class vars *************************************************************
 	
 	private static final String TAG = "WebViewActivity";
-    public static final String EXTRA_URL = "com.fbsdata.spark.webview.URL";
 
     // instance vars **********************************************************
     
@@ -153,7 +152,8 @@ public class WebViewActivity extends Activity {
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {
-	 	    Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
+	 	    //Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
+		 	Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
 	 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    startActivity(intent);	  
 		 }

@@ -1,16 +1,18 @@
 package com.sparkplatform.api.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonAnySetter;
 
 /**
  * Top level model for managing JSON entities in the library.
  */
-public class Base {
+@SuppressWarnings("serial")
+public class Base implements Serializable {
 	private static Logger logger = Logger.getLogger(Base.class);
 	private Map<String, Object> attributes = new HashMap<String, Object>();
 	

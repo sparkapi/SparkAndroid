@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +25,16 @@ import com.sparkplatform.utils.ListingFormatter;
 
 public class ViewListingsActivity extends ListActivity {
 	
+	// class vars *************************************************************
+	
 	private static final String TAG = "ViewListingsActivity";
-
+	
+	// instance vars **********************************************************
+	
+	private List<Listing> listings;
+	
+	// interface **************************************************************
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,6 +65,12 @@ public class ViewListingsActivity extends ListActivity {
 	
     public void onListItemClick(ListView l, View v, int position, long id) {
     	Log.d(TAG, "ListItem index>" + id);
+    	
+    	Listing listing = listings.get((int)id);
+	 	Intent intent = new Intent(getApplicationContext(), ViewListingActivity.class);
+ 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+ 	    intent.putExtra(UIConstants.EXTRA_LISTING, listing);
+	    startActivity(intent);	
     }
 
 	 private class SearchListingsTask extends AsyncTask<String, Void, Response> {
@@ -86,7 +101,7 @@ public class ViewListingsActivity extends ListActivity {
 	    	 Log.d(TAG,r.getResultsJSONString());
 	    	 
 	    	 try {
-	    		 List<Listing> listings = r.getResults(Listing.class);
+	    		 listings = r.getResults(Listing.class);
 
     			 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
 	    		 for(Listing l : listings)
