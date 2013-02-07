@@ -1,14 +1,25 @@
 package com.sparkplatform.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonNode;
+
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 
 import com.sparkplatform.api.FlexmlsApiClientException;
 import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.models.Listing;
+import com.sparkplatform.utils.ListingFormatter;
 
 public class MyAccountActivity extends ListActivity {
 	
@@ -45,35 +56,47 @@ public class MyAccountActivity extends ListActivity {
 	    	 
 	    	 return r;
 	     }
-	     
+	     	     
 	     protected void onPostExecute(Response r) {
-	    	 Log.d(TAG,r.getResultsJSONString());
-	    	 
-	    	 /*
-	    	 try {
-	    		 List<Listing> listings = r.getResults(Listing.class);
-
-    			 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
-	    		 for(Listing l : listings)
-	    		 {
-	    			 Map<String,String> map = new HashMap<String,String>();
-	    			 map.put("line1", ListingFormatter.getListingTitle(l));
-	    			 map.put("line2", ListingFormatter.getListingSubtitle(l));
-	    			 list.add(map);
-	    		 }
-
+	    	 JsonNode results = r.getResultsJSON();
+	    	 if(results != null && results.isArray() && results.size() > 0)
+	    	 {
+	    		 JsonNode account = results.get(0);
+	    		 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+	    		 addAccountLine(list, "Name", account.get("Name").getTextValue());
+	    		 addAccountLine(list, "Office", account.get("Office").getTextValue());
+	    		 addAccountLine(list, "Company", account.get("Company").getTextValue());
+	    		 addArrayLine(account, "Addresses", "Address", list, "Address");
+	    		 addAccountLine(list, "MLS", account.get("Mls").getTextValue());
+	    		 addArrayLine(account, "Emails", "Address", list, "Email");
+	    		 addArrayLine(account, "Phones", "Number", list, "Phone");
+	    		 addArrayLine(account, "Websites", "Uri", list, "Website");
+	    		 
 	    		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
 	    				 list,
 	    				 android.R.layout.two_line_list_item, 
 	    				 new String[] {"line1", "line2"}, 
 	    				 new int[] {android.R.id.text1, android.R.id.text2});
 	    		 setListAdapter(adapter);
-
-	    	 } catch (FlexmlsApiClientException e) {
-	    		 Log.e(TAG,"Listing JSON binding exception", e);
 	    	 }
-	    	 */
-
 	     }
+	 }
+	 
+	 private void addAccountLine(List<Map<String,String>> list, String key, String value)
+	 {
+		 Map<String,String> map = new HashMap<String,String>();
+		 map.put("line1", value);
+		 map.put("line2", key);
+		 list.add(map);
+	 }
+	 
+	 private void addArrayLine(JsonNode account, String arrayKey, String itemKey, List<Map<String,String>> list, String key)
+	 {
+		 JsonNode array = account.get(arrayKey);
+		 if(array != null && array.isArray() && array.size() > 0)
+		 {
+			 JsonNode firstItem = array.get(0);
+			 addAccountLine(list, key, firstItem.get(itemKey).getTextValue());
+		 }
 	 }
 }

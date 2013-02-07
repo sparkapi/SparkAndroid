@@ -74,8 +74,13 @@ public class Response {
 	
 	public String getResultsJSONString()
 	{
-		JsonNode results = rootNode != null ? rootNode.get("Results") : null;
+		JsonNode results = getResultsJSON();
 		return results != null ? results.toString() : null;
+	}
+	
+	public JsonNode getResultsJSON()
+	{
+		return rootNode != null ? rootNode.get("Results") : null;
 	}
 	
 	public boolean isSuccess() {
