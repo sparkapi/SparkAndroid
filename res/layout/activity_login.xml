@@ -5,11 +5,22 @@
     tools:context=".LoginActivity" >
 
     <Button
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/button_spark"
-        android:onClick="sparkLogin" />
+        android:onClick="sparkLogin"
+        android:text="@string/button_spark" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:checked="true"
+        android:textOff="@string/loginOpenID"
+        android:textOn="@string/loginHybrid" />
 
 </RelativeLayout>

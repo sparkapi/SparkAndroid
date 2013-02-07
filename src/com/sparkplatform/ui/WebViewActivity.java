@@ -49,17 +49,18 @@ public class WebViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_web_view);
 		
+	    this.sparkClient = SparkClient.getInstance();
+	    
 		Intent intent = getIntent();
-		// will need to load which type of login
-		//String url = intent.getStringExtra(EXTRA_URL);		
+		String loginURL = intent.getBooleanExtra(UIConstants.EXTRA_LOGIN_HYBRID, true) ? 
+				sparkClient.getSparkHybridOpenIdURLString() : 
+				sparkClient.getSparkOpenIdURLString();
 		
 		WebView webView = (WebView) findViewById(R.id.webview);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webView.setWebViewClient(new SparkWebViewClient());
-		
-	    this.sparkClient = SparkClient.getInstance();
-	    String loginURL = sparkClient.getSparkHybridOpenIdURLString();
+				
 		webView.loadUrl(loginURL);
 	    
 		//webView.loadUrl(SparkClient.sparkOpenIdLogoutURL);

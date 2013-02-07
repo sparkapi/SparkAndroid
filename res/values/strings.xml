@@ -10,5 +10,7 @@
     <string name="title_activity_view_listings">View Listings</string>
     <string name="title_activity_my_account">My Account</string>
     <string name="title_activity_view_listing">View Listing</string>
+    <string name="loginHybrid">Hybrid</string>
+    <string name="loginOpenID">OpenID</string>
 
 </resources>
