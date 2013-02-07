@@ -1,7 +1,9 @@
 package com.sparkplatform.api.models;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonParser;
@@ -51,7 +53,10 @@ public class StandardField extends Base {
 		Integer(Integer.class),
 		Decimal(Double.class),
 		Boolean(Boolean.class),
-		Character(String.class);
+		Character(String.class),
+		Date(Date.class),
+		Datetime(Date.class);
+		
 		private Class<?> klass;
 		private Type(Class<?> c){
 			this.klass = c;
@@ -62,16 +67,28 @@ public class StandardField extends Base {
 	}
 	
 	public static class Field extends Base {
+		@JsonProperty("Label")
+		private String label;
 		@JsonProperty("Searchable")
 		private boolean searchable;
 		@JsonProperty("Type")
 		private Type type;
 		@JsonProperty("ResourceUri")
 		private String resourceUri;
-		
 		@JsonProperty("HasList")
 		private boolean hasList;
+		@JsonProperty("MlsVisible")
+		private List<String> mlsVisible;
+		
 
+		public String getLabel() {
+			return label;
+		}
+		
+		public void setLabel(String label) {
+			this.label = label;
+		}
+		
 		public boolean isSearchable() {
 			return searchable;
 		}
@@ -104,6 +121,21 @@ public class StandardField extends Base {
 			this.hasList = hasList;
 		}
 		
+		public List<String>getMlsVisible() {
+			return mlsVisible;
+		}
+		
+		public void setMlsVisible(List<String> mlsVisible) {
+			this.mlsVisible = mlsVisible;
+		}
+
+		@Override
+		public String toString() {
+			return "Field [label=" + label + ", searchable=" + searchable
+					+ ", type=" + type + ", resourceUri=" + resourceUri
+					+ ", hasList=" + hasList + ", mlsVisible=" + mlsVisible
+					+ "]";
+		}
 	}
 	
 	public StandardField(Map<String, Field> fieldMap) {
@@ -128,5 +160,16 @@ public class StandardField extends Base {
 	@JsonIgnore
 	public void setAttribute(String key, Object value) {
 		super.setAttribute(key, value);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return fieldMap.toString();
+	}
+	
+	public Map<String, Field> getFieldMap()
+	{
+		return fieldMap;
 	}
 }

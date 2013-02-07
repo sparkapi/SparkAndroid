@@ -82,6 +82,12 @@ public class Response {
 	{
 		return rootNode != null ? rootNode.get("Results") : null;
 	}
+
+	public JsonNode getFirstResult()
+	{
+		JsonNode results = getResultsJSON();
+   	 	return results != null && results.isArray() && results.size() > 0 ? results.get(0) : null;
+	}
 	
 	public boolean isSuccess() {
 		return success;
