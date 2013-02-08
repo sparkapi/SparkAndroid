@@ -93,23 +93,13 @@ public class WebViewActivity extends Activity {
 		{
 			Log.d(TAG, "loadUrl>" + url);
 			
-			Uri uri = Uri.parse(url);
-			String openIdMode = null;
 			String openIdSparkCode = null;
 			
-		    if((openIdMode = uri.getQueryParameter("openid.mode")) != null &&
-		       openIdMode.equals("id_res") &&
-		       (openIdSparkCode = uri.getQueryParameter("openid.spark.code")) != null)
-		       {
-				   Log.d(TAG, "openIdSparkCode>" + openIdSparkCode);
-				   
-				   new OAuth2PostTask().execute(openIdSparkCode);
-				   				   
-		    	   return true;
-		       }
-		    else
+		    if((openIdSparkCode = SparkClient.isHybridAuthorized(url)) != null)
 		    {
-		    	
+				   Log.d(TAG, "openIdSparkCode>" + openIdSparkCode);
+				   new OAuth2PostTask().execute(openIdSparkCode);	   				   
+		    	   return true;
 		    }
 
 			return false;
@@ -118,45 +108,18 @@ public class WebViewActivity extends Activity {
 	
 	 private class OAuth2PostTask extends AsyncTask<String, Void, SparkSession> {
 	     protected SparkSession doInBackground(String... openIdSparkCode) {
-			   Map<String,String> map = new HashMap<String,String>();
-			   map.put("client_id", SparkClient.sparkClientKey);
-			   map.put("client_secret", SparkClient.sparkClientSecret);
-			   map.put("grant_type", "authorization_code");
-			   map.put("code", openIdSparkCode[0]);
-			   map.put("redirect_uri", SparkClient.sparkCallbackURL);
-			   
-			   // TODO: move to SparkClient.authenticate()?
-			   SparkSession sparkSession = null;
-			   try
-			   {
-				   HttpPost post = new HttpPost(SparkClient.getSparkOAuth2GrantString());
-				   SparkClient.initSparkHeader(post);
-				   ObjectMapper mapper = new ObjectMapper();
-				   StringEntity stringEntity = new StringEntity(mapper.writeValueAsString(map));
-				   stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
-				   post.setEntity(stringEntity);
-				   HttpClient httpclient = new DefaultHttpClient(); 
-				   HttpResponse response = httpclient.execute(post);
-				   String responseBody = EntityUtils.toString(response.getEntity());
-				   Log.d(TAG, "OAuth2 response>" + responseBody);
-				   sparkSession = mapper.readValue(responseBody, SparkSession.class);
-				   sparkClient.setSession(sparkSession);
-				   Connection<Response> connection = sparkClient.getConnection();
-				   ((ConnectionApacheHttp)connection).setHeaders(sparkClient.getHeaders());
-			   } 
-			   catch (Exception e)
-			   {
-				   Log.e(TAG, "OAuth2PostTask exception>", e);
-			   }
-	    	 
-	    	 return sparkSession;
+	    	 return sparkClient.hybridAuthenticate(openIdSparkCode[0]);
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {
 	 	    //Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
-		 	Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
-	 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		    startActivity(intent);	  
+	    	 
+	    	if(sparkSession != null)
+	    	{
+	    		Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
+	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    		startActivity(intent);	  
+	    	}
 		 }
 	 }
 }

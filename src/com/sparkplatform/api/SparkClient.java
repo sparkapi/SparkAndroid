@@ -1,15 +1,26 @@
 package com.sparkplatform.api;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-
-import android.util.Log;
-
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class SparkClient extends Client {
 
@@ -90,13 +101,69 @@ public class SparkClient extends Client {
 		return "https://" + sparkAPIEndpoint + sparkAPIVersion + sparkOAuth2Grant;
 	}
 	
-	/*
-	public static boolean hybridAuthenticate(String url, SparkClient sparkClient)
-		throws SparkException
+	public static String isHybridAuthorized(String url)
 	{
+		List<NameValuePair> params;
+		try {
+			params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+		} catch (URISyntaxException e) {
+			logger.error("malformed URL", e);
+			return null;
+		}
 		
+		String openIdMode = null;
+		String openIdSparkCode = null;
+		
+	    return ((openIdMode = getParameter(params,"openid.mode")) != null &&
+	       openIdMode.equals("id_res") &&
+	       (openIdSparkCode = getParameter(params,"openid.spark.code")) != null) ? openIdSparkCode : null;
 	}
 	
+	private static String getParameter(List<NameValuePair> params, String name)
+	{
+		for(NameValuePair nameValuePair : params)
+			if(nameValuePair.getName().equals(name))
+				return nameValuePair.getValue();
+		
+		return null;
+	}
+	
+	public SparkSession hybridAuthenticate(String openIdSparkCode)
+//		throws SparkException
+	{
+		   Map<String,String> map = new HashMap<String,String>();
+		   map.put("client_id", SparkClient.sparkClientKey);
+		   map.put("client_secret", SparkClient.sparkClientSecret);
+		   map.put("grant_type", "authorization_code");
+		   map.put("code", openIdSparkCode);
+		   map.put("redirect_uri", SparkClient.sparkCallbackURL);
+		   
+		   SparkSession sparkSession = null;
+		   try
+		   {
+			   HttpPost post = new HttpPost(SparkClient.getSparkOAuth2GrantString());
+			   SparkClient.initSparkHeader(post);
+			   ObjectMapper mapper = new ObjectMapper();
+			   StringEntity stringEntity = new StringEntity(mapper.writeValueAsString(map));
+			   stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
+			   post.setEntity(stringEntity);
+			   HttpClient httpclient = new DefaultHttpClient(); 
+			   HttpResponse response = httpclient.execute(post);
+			   String responseBody = EntityUtils.toString(response.getEntity());
+			   logger.debug("OAuth2 response>" + responseBody);
+			   sparkSession = mapper.readValue(responseBody, SparkSession.class);
+			   setSession(sparkSession);
+			   Connection<Response> connection = getConnection();
+			   ((ConnectionApacheHttp)connection).setHeaders(getHeaders());
+		   } 
+		   catch (Exception e)
+		   {
+			   logger.error("exception>", e);
+		   }
+		   
+		   return sparkSession;
+	}
+	/*
 	public static boolean openIdAuthenticate(String url, SparkClient sparkClient)
 		throws SparkException
 	{
@@ -127,7 +194,6 @@ public class SparkClient extends Client {
 		for (String key : params.keySet()) {
 			b.append("&").append(key).append("=").append(encode(params.get(key)));
 		}
-		Log.d(TAG, "requestPath>" + b.toString());
 		return b.toString();
 	}
 	
