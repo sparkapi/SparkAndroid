@@ -11,6 +11,7 @@ public class SparkSession extends Session {
 	private String accessToken;
 	@JsonProperty("refresh_token")
 	private String refreshToken;
+	private String openIdToken;
 	
 	public String getAccessToken() {
 		return accessToken;
@@ -18,6 +19,14 @@ public class SparkSession extends Session {
 	
 	public String getRefreshToken() {
 		return refreshToken;
+	}
+	
+	public String getOpenIdToken() {
+		return openIdToken;
+	}
+	
+	public void setOpenIdToken(String openIdToken) {
+		this.openIdToken = openIdToken;
 	}
 	
 	public boolean isExpired(){

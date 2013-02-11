@@ -129,7 +129,6 @@ public class SparkClient extends Client {
 	}
 	
 	public SparkSession hybridAuthenticate(String openIdSparkCode)
-//		throws SparkException
 	{
 		   Map<String,String> map = new HashMap<String,String>();
 		   map.put("client_id", SparkClient.sparkClientKey);
@@ -165,7 +164,6 @@ public class SparkClient extends Client {
 	}
 
 	public SparkSession openIdAuthenticate(String url)
-		//throws SparkException
 	{
 		List<NameValuePair> params;
 		try {
@@ -173,6 +171,18 @@ public class SparkClient extends Client {
 		} catch (URISyntaxException e) {
 			logger.error("malformed URL", e);
 			return null;
+		}
+		
+		String openIdMode = null;
+		if((openIdMode = getParameter(params,"openid.mode")) != null &&
+		   "id_res".equals(openIdMode))
+		{
+			String openIdSparkId = getParameter(params,"openid.ax.value.id");
+			logger.debug("openIdToken>" + openIdSparkId);
+			SparkSession session = new SparkSession();
+			session.setOpenIdToken(openIdSparkId);
+			setSession(session);
+			return session;
 		}
 		
 		return null;
