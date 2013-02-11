@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -68,11 +70,24 @@ public class ViewListingsActivity extends ListActivity {
     	
     	Listing listing = listings.get((int)id);
 	 	Intent intent = new Intent(getApplicationContext(), ViewListingActivity.class);
- 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
  	    intent.putExtra(UIConstants.EXTRA_LISTING, listing);
 	    startActivity(intent);	
     }
 
+	@Override
+	public boolean onOptionsItemSelected (MenuItem item)
+	{
+		if(item.getItemId() == R.id.menu_account)
+		{
+    		Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
+    		startActivity(intent);
+			
+			return true;
+		}
+		
+		return false;
+	}
+    
 	 private class SearchListingsTask extends AsyncTask<String, Void, Response> {
 	     protected Response doInBackground(String... filter) {
 				   

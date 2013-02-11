@@ -3,14 +3,17 @@ package com.sparkplatform.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.codehaus.jackson.JsonNode;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
@@ -38,6 +41,31 @@ public class MyAccountActivity extends ListActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_my_account, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected (MenuItem item)
+	{
+		if(item.getItemId() == R.id.menu_logout)
+		{
+			// remove shared preferences
+			Properties p = System.getProperties();
+			p.remove(UIConstants.PROPERTY_OPENID_ID);
+			p.remove(UIConstants.PROPERTY_OPENID_FRIENDLY);
+			p.remove(UIConstants.PROPERTY_OPENID_FIRST_NAME);
+			p.remove(UIConstants.PROPERTY_OPENID_MIDDLE_NAME);
+			p.remove(UIConstants.PROPERTY_OPENID_LAST_NAME);
+			p.remove(UIConstants.PROPERTY_OPENID_EMAIL);
+			
+			// pop to login
+    		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    		startActivity(intent);
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	 private class MyAccountTask extends AsyncTask<Void, Void, Response> {
