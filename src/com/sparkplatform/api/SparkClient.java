@@ -163,13 +163,20 @@ public class SparkClient extends Client {
 		   
 		   return sparkSession;
 	}
-	/*
-	public static boolean openIdAuthenticate(String url, SparkClient sparkClient)
-		throws SparkException
+
+	public SparkSession openIdAuthenticate(String url)
+		//throws SparkException
 	{
+		List<NameValuePair> params;
+		try {
+			params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+		} catch (URISyntaxException e) {
+			logger.error("malformed URL", e);
+			return null;
+		}
 		
+		return null;
 	}
-	*/
 	
 	
 	public static void initSparkHeader(HttpUriRequest httpRequest)

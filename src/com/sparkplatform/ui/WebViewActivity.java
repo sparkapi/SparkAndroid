@@ -40,6 +40,7 @@ public class WebViewActivity extends Activity {
     // instance vars **********************************************************
     
     private SparkClient sparkClient;
+    private boolean loginHybrid;
     
     // interface **************************************************************
     
@@ -52,7 +53,8 @@ public class WebViewActivity extends Activity {
 	    this.sparkClient = SparkClient.getInstance();
 	    
 		Intent intent = getIntent();
-		String loginURL = intent.getBooleanExtra(UIConstants.EXTRA_LOGIN_HYBRID, true) ? 
+		loginHybrid = intent.getBooleanExtra(UIConstants.EXTRA_LOGIN_HYBRID, true);
+		String loginURL = loginHybrid ? 
 				sparkClient.getSparkHybridOpenIdURLString() : 
 				sparkClient.getSparkOpenIdURLString();
 		
@@ -94,13 +96,13 @@ public class WebViewActivity extends Activity {
 			Log.d(TAG, "loadUrl>" + url);
 			
 			String openIdSparkCode = null;
-			
-		    if((openIdSparkCode = SparkClient.isHybridAuthorized(url)) != null)
+		    if(loginHybrid && (openIdSparkCode = SparkClient.isHybridAuthorized(url)) != null)
 		    {
 				   Log.d(TAG, "openIdSparkCode>" + openIdSparkCode);
 				   new OAuth2PostTask().execute(openIdSparkCode);	   				   
 		    	   return true;
 		    }
+		    //else if(!loginHybrid && )
 
 			return false;
 		}
@@ -111,12 +113,12 @@ public class WebViewActivity extends Activity {
 	    	 return sparkClient.hybridAuthenticate(openIdSparkCode[0]);
 	     }
 	     
-	     protected void onPostExecute(SparkSession sparkSession) {
-	 	    //Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
-	    	 
+	     protected void onPostExecute(SparkSession sparkSession) {	    	 
 	    	if(sparkSession != null)
 	    	{
-	    		Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
+	    		Intent intent = loginHybrid ?
+	    				new Intent(getApplicationContext(), ViewListingsActivity.class) :
+	    				new Intent(getApplicationContext(), MyAccountActivity.class);
 	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    		startActivity(intent);	  
 	    	}

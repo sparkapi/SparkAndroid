@@ -101,7 +101,7 @@ public class Response {
 			throw exception;
 		}
 		if(!isSuccess()){
-			throw new FlexmlsApiException(getMessage(), ApiCode.get(getCode()), getStatus());
+			throw new SparkApiException(getMessage(), ApiCode.get(getCode()), getStatus());
 		}
 	}
 	public int getStatus() {

@@ -239,7 +239,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 			while(retries <= MAX_RETRIES){
 				try {
 					return run(apiPath, body);
-				} catch (FlexmlsApiException e) {
+				} catch (SparkApiException e) {
 					if(retries <= MAX_RETRIES && ApiCode.SESSION_EXPIRED.equals(e.getCode())){
 						authenticate();
 					}
