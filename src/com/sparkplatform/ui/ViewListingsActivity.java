@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
 import com.sparkplatform.api.ApiParameter;
@@ -25,15 +25,18 @@ import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.models.Listing;
 import com.sparkplatform.utils.ListingFormatter;
 
-public class ViewListingsActivity extends ListActivity {
+public class ViewListingsActivity extends ListActivity implements SearchView.OnQueryTextListener {
 	
 	// class vars *************************************************************
 	
 	private static final String TAG = "ViewListingsActivity";
 	
+	private static final String DEFAULT_FILTER = "PropertyType Eq 'A'";
+	
 	// instance vars **********************************************************
 	
 	private List<Listing> listings;
+	private SearchView searchView;
 	
 	// interface **************************************************************
 	
@@ -42,7 +45,7 @@ public class ViewListingsActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_listings);
 		
-		   new SearchListingsTask().execute("PropertyType Eq 'A'");
+		   new SearchListingsTask().execute(DEFAULT_FILTER);
 		   
 		   /*
 	        // Create a progress bar to display while the list loads
@@ -62,6 +65,11 @@ public class ViewListingsActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_view_listings, menu);
+		
+	    this.searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+	    searchView.setQuery(DEFAULT_FILTER, false);
+	    searchView.setOnQueryTextListener(this);
+		
 		return true;
 	}
 	
@@ -139,6 +147,20 @@ public class ViewListingsActivity extends ListActivity {
 	    	 }
 
 		 }
+	 }
+	 
+	 // OnQueryTextListener ***************************************************
+	 
+	 public boolean onQueryTextChange (String newText)
+	 {
+		 return false;
+	 }
+	 
+	 public boolean onQueryTextSubmit (String query)
+	 {
+		 this.searchView.clearFocus();
+		 new SearchListingsTask().execute(query);
+		 return true;
 	 }
 	
 }
