@@ -27,7 +27,10 @@ public class MyAccountActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_account);
 		
-		new MyAccountTask().execute();
+		if(SparkClient.getInstance().isHybridSession())
+			new MyAccountTask().execute();
+		else
+			buildOpenIDListAdapter();
 	}
 
 	@Override
@@ -77,5 +80,23 @@ public class MyAccountActivity extends ListActivity {
 	    		 setListAdapter(adapter);
 	    	 }
 	     }
+	 }
+	 
+	 private void buildOpenIDListAdapter()
+	 {
+		 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		 ActivityHelper.addListLine(list, "ID", System.getProperty(UIConstants.PROPERTY_OPENID_ID));
+		 ActivityHelper.addListLine(list, "Full Name", System.getProperty(UIConstants.PROPERTY_OPENID_FRIENDLY));
+		 ActivityHelper.addListLine(list, "First Name", System.getProperty(UIConstants.PROPERTY_OPENID_FIRST_NAME));
+		 ActivityHelper.addListLine(list, "Middle Name", System.getProperty(UIConstants.PROPERTY_OPENID_MIDDLE_NAME));
+		 ActivityHelper.addListLine(list, "Last Name", System.getProperty(UIConstants.PROPERTY_OPENID_LAST_NAME));
+		 ActivityHelper.addListLine(list, "Email", System.getProperty(UIConstants.PROPERTY_OPENID_EMAIL));
+
+		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
+				 list,
+				 android.R.layout.two_line_list_item, 
+				 new String[] {"line1", "line2"}, 
+				 new int[] {android.R.id.text1, android.R.id.text2});
+		 setListAdapter(adapter);
 	 }
 }

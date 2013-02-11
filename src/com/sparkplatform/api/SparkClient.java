@@ -68,26 +68,61 @@ public class SparkClient extends Client {
 
 	// interface **************************************************************
 	
+	public boolean isHybridSession()
+	{
+		SparkSession session = (SparkSession)getSession();
+		return session != null && session.getAccessToken() != null && session.getRefreshToken() != null;
+	}
+	
+	public boolean isOpenIDSession()
+	{
+		SparkSession session = (SparkSession)getSession();
+		return session != null && session.getOpenIdToken() != null;
+	}
+	
 	public String getSparkOpenIdURLString()
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("https://sparkplatform.com/openid");
 		builder.append("?openid.mode=checkid_setup");
 		builder.append("&openid.spark.client_id=");
-		try {
-			builder.append(URLEncoder.encode(getConfig().getApiKey(), "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage(), e);
-		}
+		encodeParam(builder, getConfig().getApiKey());
 		builder.append("&openid.return_to=");
-		try {
-			builder.append(URLEncoder.encode(sparkCallbackURL, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage(), e);
-		}
+		encodeParam(builder, sparkCallbackURL);
+		return builder.toString();
+	}
+	
+	public String getSparkOpenIdAttributeExchangeURLString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(getSparkOpenIdURLString());
+		builder.append("&openid.ax.mode=fetch_request");
+		builder.append("&openid.ax.type.first_name=");
+		encodeParam(builder,"http://openid.net/schema/namePerson/first");
+		builder.append("&openid.ax.type.last_name=");
+		encodeParam(builder,"http://openid.net/schema/namePerson/last");
+		builder.append("&openid.ax.type.middle_name=");
+		encodeParam(builder,"http://openid.net/schema/namePerson/middle");
+		builder.append("&openid.ax.type.friendly=");
+		encodeParam(builder,"http://openid.net/schema/namePerson/friendly");
+		builder.append("&openid.ax.type.id=");
+		encodeParam(builder,"http://openid.net/schema/person/guid");		
+		builder.append("&openid.ax.type.email=");
+		encodeParam(builder,"http://openid.net/schema/contact/internet/email");
+		builder.append("&openid.ax.required=");
+		encodeParam(builder,"first_name,last_name,middle_name,friendly,id,email");
 		return builder.toString();
 	}
 
+	private void encodeParam(StringBuilder builder, String value)
+	{
+		try {
+			builder.append(URLEncoder.encode(value, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
 	public String getSparkHybridOpenIdURLString()
 	{
 		StringBuilder builder = new StringBuilder();
@@ -101,15 +136,22 @@ public class SparkClient extends Client {
 		return "https://" + sparkAPIEndpoint + sparkAPIVersion + sparkOAuth2Grant;
 	}
 	
-	public static String isHybridAuthorized(String url)
+	public static List<NameValuePair> getURLParams(String url)
 	{
-		List<NameValuePair> params;
+		List<NameValuePair> params = null;
 		try {
 			params = URLEncodedUtils.parse(new URI(url), "UTF-8");
 		} catch (URISyntaxException e) {
 			logger.error("malformed URL", e);
-			return null;
 		}
+		return params;
+	}
+	
+	public static String isHybridAuthorized(String url)
+	{
+		List<NameValuePair> params = getURLParams(url);
+		if(params == null)
+			return null;
 		
 		String openIdMode = null;
 		String openIdSparkCode = null;
@@ -119,7 +161,7 @@ public class SparkClient extends Client {
 	       (openIdSparkCode = getParameter(params,"openid.spark.code")) != null) ? openIdSparkCode : null;
 	}
 	
-	private static String getParameter(List<NameValuePair> params, String name)
+	public static String getParameter(List<NameValuePair> params, String name)
 	{
 		for(NameValuePair nameValuePair : params)
 			if(nameValuePair.getName().equals(name))
@@ -165,13 +207,9 @@ public class SparkClient extends Client {
 
 	public SparkSession openIdAuthenticate(String url)
 	{
-		List<NameValuePair> params;
-		try {
-			params = URLEncodedUtils.parse(new URI(url), "UTF-8");
-		} catch (URISyntaxException e) {
-			logger.error("malformed URL", e);
+		List<NameValuePair> params = getURLParams(url);
+		if(params == null)
 			return null;
-		}
 		
 		String openIdMode = null;
 		if((openIdMode = getParameter(params,"openid.mode")) != null &&

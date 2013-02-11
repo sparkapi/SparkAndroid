@@ -1,9 +1,11 @@
 package com.sparkplatform.ui;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -56,7 +58,7 @@ public class WebViewActivity extends Activity {
 		loginHybrid = intent.getBooleanExtra(UIConstants.EXTRA_LOGIN_HYBRID, true);
 		String loginURL = loginHybrid ? 
 				sparkClient.getSparkHybridOpenIdURLString() : 
-				sparkClient.getSparkOpenIdURLString();
+				sparkClient.getSparkOpenIdAttributeExchangeURLString();
 		
 		WebView webView = (WebView) findViewById(R.id.webview);
 		WebSettings webSettings = webView.getSettings();
@@ -102,7 +104,15 @@ public class WebViewActivity extends Activity {
 				   new OAuth2PostTask().execute(openIdSparkCode);	   				   
 		    	   return true;
 		    }
-		    //else if(!loginHybrid && )
+		    else if(!loginHybrid && sparkClient.openIdAuthenticate(url) != null)
+		    {
+	    		processAuthentication((SparkSession)sparkClient.getSession(), url);
+		    	
+	    		Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
+	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    		startActivity(intent);
+	    		return true;
+		    }
 
 			return false;
 		}
@@ -116,12 +126,42 @@ public class WebViewActivity extends Activity {
 	     protected void onPostExecute(SparkSession sparkSession) {	    	 
 	    	if(sparkSession != null)
 	    	{
-	    		Intent intent = loginHybrid ?
-	    				new Intent(getApplicationContext(), ViewListingsActivity.class) :
-	    				new Intent(getApplicationContext(), MyAccountActivity.class);
+	    		processAuthentication(sparkSession, null);
+	    		
+	    		Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
 	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    		startActivity(intent);	  
 	    	}
+		 }
+	 }
+	 
+	 private void processAuthentication(SparkSession session, String url)
+	 {
+		 if(session.getOpenIdToken() != null)
+		 {
+				List<NameValuePair> params = SparkClient.getURLParams(url);
+				String value = SparkClient.getParameter(params, "openid.ax.value.id");
+				if(value != null)
+					System.setProperty(UIConstants.PROPERTY_OPENID_ID, value);
+				value = SparkClient.getParameter(params, "openid.ax.value.friendly");
+				if(value != null)
+					System.setProperty(UIConstants.PROPERTY_OPENID_FRIENDLY, value);
+				value = SparkClient.getParameter(params, "openid.ax.value.first_name");
+				if(value != null)
+					System.setProperty(UIConstants.PROPERTY_OPENID_FIRST_NAME, value);
+				value = SparkClient.getParameter(params, "openid.ax.value.middle_name");
+				if(value != null)
+					System.setProperty(UIConstants.PROPERTY_OPENID_MIDDLE_NAME, value);
+				value = SparkClient.getParameter(params, "openid.ax.value.last_name");
+				if(value != null)
+					System.setProperty(UIConstants.PROPERTY_OPENID_LAST_NAME, value);
+				value = SparkClient.getParameter(params, "openid.ax.value.email");
+				if(value != null)
+					System.setProperty(UIConstants.PROPERTY_OPENID_EMAIL, value);
+			 
+		 }
+		 else
+		 {
 		 }
 	 }
 }
