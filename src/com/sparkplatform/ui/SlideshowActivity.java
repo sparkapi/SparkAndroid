@@ -21,7 +21,9 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,16 +63,16 @@ public class SlideshowActivity extends Activity {
 	}
 	
     public class ImageAdapter extends BaseAdapter {
-        private static final int ITEM_WIDTH = 136;
-        private static final int ITEM_HEIGHT = 88;
 
         //private final int mGalleryItemBackground;
-        private final Context mContext;
+        private final Context context;
 
-        private final float mDensity;
+        private final int width;
+        private final int height;
+        private final float density;
 
         public ImageAdapter(Context c) {
-            mContext = c;
+            context = c;
             // See res/values/attrs.xml for the <declare-styleable> that defines
             // Gallery1.
             //TypedArray a = obtainStyledAttributes(R.styleable.Gallery1);
@@ -78,7 +80,13 @@ public class SlideshowActivity extends Activity {
             //        R.styleable.Gallery1_android_galleryItemBackground, 0);
             //a.recycle();
 
-            mDensity = c.getResources().getDisplayMetrics().density;
+            density = c.getResources().getDisplayMetrics().density;
+            
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
         }
 
         public int getCount() {
@@ -96,13 +104,13 @@ public class SlideshowActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView == null) {
-                convertView = new ImageView(mContext);
+                convertView = new ImageView(context);
 
                 imageView = (ImageView) convertView;
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 imageView.setLayoutParams(new Gallery.LayoutParams(
-                        (int) (ITEM_WIDTH * mDensity + 0.5f),
-                        (int) (ITEM_HEIGHT * mDensity + 0.5f)));
+                        (int) (width * density),
+                        (int) (height * density)));
             
                 // The preferred Gallery item background
                 //imageView.setBackgroundResource(mGalleryItemBackground);
