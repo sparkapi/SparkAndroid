@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -80,9 +81,11 @@ public class WebViewActivity extends Activity {
 	
 	private class SparkWebViewClient extends WebViewClient
 	{
-		/*
 		public void onPageFinished (WebView view, String url)
 		{
+			findViewById(R.id.webViewProgressBar).setVisibility(View.GONE);
+
+			/*
 			if(url.equals(SparkClient.sparkOpenIdLogoutURL))
 			{
 			    Configuration c = new Configuration();
@@ -92,8 +95,9 @@ public class WebViewActivity extends Activity {
 				Log.d(TAG, "loginUrl>" + loginURL);
 			    view.loadUrl(loginURL);
 			}
+			*/
 		}
-		*/
+
 		public boolean shouldOverrideUrlLoading (WebView view, String url)
 		{
 			Log.d(TAG, "loadUrl>" + url);

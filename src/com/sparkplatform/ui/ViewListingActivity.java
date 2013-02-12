@@ -69,6 +69,8 @@ public class ViewListingActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_listing);
 		
+		getListView().setEmptyView(findViewById(R.id.viewListingProgressBar));
+		
 		Intent i = getIntent();
 		summaryListing = (Listing)i.getSerializableExtra(UIConstants.EXTRA_LISTING);		
     	Log.d(TAG, "summaryListing>" + summaryListing);

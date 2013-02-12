@@ -46,6 +46,8 @@ public class MyAccountActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_account);
 		
+		getListView().setEmptyView(findViewById(R.id.myAccountProgressBar));
+
 		if(SparkClient.getInstance().isHybridSession())
 			new MyAccountTask().execute();
 		else

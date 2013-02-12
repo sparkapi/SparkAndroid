@@ -27,12 +27,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
@@ -62,20 +67,10 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_listings);
-		
-		   new SearchListingsTask().execute(DEFAULT_FILTER);
-		   
-		   /*
-	        // Create a progress bar to display while the list loads
-	        ProgressBar progressBar = new ProgressBar(this);
-	        //progressBar.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-	        progressBar.setIndeterminate(true);
-	        getListView().setEmptyView(progressBar);
 
-	        // Must add the progress bar to the root of the layout
-	        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-	        root.addView(progressBar);
-	        */
+		getListView().setEmptyView(findViewById(R.id.viewListingsProgressBar));
+
+		new SearchListingsTask().execute(DEFAULT_FILTER);
 
 	}
 
