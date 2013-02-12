@@ -43,7 +43,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.sparkplatform.api.ApiParameter;
-import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.models.Listing;
@@ -141,7 +141,7 @@ public class ViewListingActivity extends ListActivity {
 	    		 r = SparkClient.getInstance().get("/listings",parameters);
 	    		 Log.d(TAG, "success>" + r.isSuccess());
 	    	 }
-	    	 catch(FlexmlsApiClientException e)
+	    	 catch(SparkApiClientException e)
 	    	 {
 	    		 Log.e(TAG, "/listings exception>", e);
 	    	 }
@@ -168,7 +168,7 @@ public class ViewListingActivity extends ListActivity {
 				 r = SparkClient.getInstance().get("/standardfields", null);
 				 Log.d(TAG, "success>" + r.isSuccess());
 			 }
-			 catch(FlexmlsApiClientException e)
+			 catch(SparkApiClientException e)
 			 {
 				 Log.e(TAG, "/standardfields exception>", e);
 			 }
@@ -203,7 +203,7 @@ public class ViewListingActivity extends ListActivity {
 				
 				if(listing != null && sortedStandardFields != null)
 					loadViewListing();
-			} catch (FlexmlsApiClientException e) {
+			} catch (SparkApiClientException e) {
 	    		 Log.e(TAG,"StandardField JSON binding exception", e);
 			}
 		 }

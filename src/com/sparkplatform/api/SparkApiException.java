@@ -19,7 +19,7 @@ package com.sparkplatform.api;
 /**
  * Errors Specifically returned from the API
  */
-public class SparkApiException extends FlexmlsApiClientException {
+public class SparkApiException extends SparkApiClientException {
 	private static final long serialVersionUID = -8156427208964545915L;
 	private String message;
 	private ApiCode code;

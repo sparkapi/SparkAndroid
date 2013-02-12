@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.sparkplatform.api.ApiParameter;
 import com.sparkplatform.api.Client;
-import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.models.PropertyType;
 import com.sparkplatform.api.models.StandardField;
 
@@ -35,7 +35,7 @@ public class StandardFieldService extends BaseService<StandardField> {
 	public StandardFieldService(Client c) {
 		super(c);
 	}
-	public List<StandardField> nearby(String latititude, String longitued, String expand, PropertyType first, PropertyType ... types) throws FlexmlsApiClientException{
+	public List<StandardField> nearby(String latititude, String longitued, String expand, PropertyType first, PropertyType ... types) throws SparkApiClientException{
 		StringBuffer buffer = new StringBuffer(getPath()).append("/nearby/").append(first.getMlsCode());
 		for (PropertyType propertyType : types) {
 			buffer.append(",").append(propertyType.getMlsCode());

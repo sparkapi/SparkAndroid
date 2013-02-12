@@ -24,7 +24,7 @@ import java.util.Map;
 
 import com.sparkplatform.api.ApiParameter;
 import com.sparkplatform.api.Client;
-import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.models.Base;
 
 /**
@@ -45,21 +45,21 @@ public abstract class BaseService<T extends Base> {
 		return c;
 	}
 
-	public T get(String id) throws FlexmlsApiClientException {
+	public T get(String id) throws SparkApiClientException {
 		return get(id, EMPTY);
 	}
 
 	public T get(String id, Map<ApiParameter, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 		return c.get(getPath(id), options).getResults(model()).get(0);
 	}
 
-	public List<T> find() throws FlexmlsApiClientException {
+	public List<T> find() throws SparkApiClientException {
 		return find(EMPTY);
 	}
 
 	public List<T> find(Map<ApiParameter, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 		return c.get(getPath(), options).getResults(model());
 	}
 

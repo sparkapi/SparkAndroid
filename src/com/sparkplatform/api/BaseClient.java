@@ -68,10 +68,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response get(String path, Map<U, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 				return new ReAuthable("GET", path, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws FlexmlsApiClientException {
+					public Response run(String path, String body) throws SparkApiClientException {
 						return connection.get(path);
 					}
 				}.execute();
@@ -79,10 +79,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response post(String path, String body, Map<U, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 				return new ReAuthable("POST", path, body, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws FlexmlsApiClientException {
+					public Response run(String path, String body) throws SparkApiClientException {
 						return connection.post(path,body);
 					}
 				}.execute();
@@ -90,10 +90,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response put(String path, String body, Map<U, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 				return new ReAuthable("PUT", path, body, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws FlexmlsApiClientException {
+					public Response run(String path, String body) throws SparkApiClientException {
 						return connection.put(path,body);
 					}
 				}.execute();
@@ -101,10 +101,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response delete(String path, Map<U, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 				return new ReAuthable("DELETE", path, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws FlexmlsApiClientException {
+					public Response run(String path, String body) throws SparkApiClientException {
 						return connection.delete(path);
 					}
 				}.execute();
@@ -118,13 +118,13 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		}
 	}
 
-	protected void reauth() throws FlexmlsApiClientException {
+	protected void reauth() throws SparkApiClientException {
 		if(session == null || session.isExpired()){
 			authenticate();
 		}
 	}
 
-	Session authenticate() throws FlexmlsApiClientException {
+	Session authenticate() throws SparkApiClientException {
 		StringBuffer b = new StringBuffer(config.getApiSecret());
 		b.append("ApiKey").append(config.getApiKey());
 		String signature = sign(b.toString());
@@ -133,7 +133,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		Response response = secure.post(path,"");
 		List<Session> sessions = response.getResults(Session.class);
 		if(sessions.isEmpty()){
-			throw new FlexmlsApiClientException("Service error.  No session returned for service authentication.");
+			throw new SparkApiClientException("Service error.  No session returned for service authentication.");
 		}
 		Session s = sessions.get(0);
 		setSession(s);
@@ -247,7 +247,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		public ReAuthable(String command, String path, Map<String, String> options) {
 			this(command, path, "", options);
 		}
-		public Response execute() throws FlexmlsApiClientException {
+		public Response execute() throws SparkApiClientException {
 			reauth();
 			String apiPath = setupRequest(path, body, options);
 			log(command, apiPath);
@@ -265,9 +265,9 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 				}
 				retries++;
 			}
-			throw new FlexmlsApiClientException("Session expired and maximum number of authentication attempts reached.");
+			throw new SparkApiClientException("Session expired and maximum number of authentication attempts reached.");
 		}
-		protected abstract Response run(String path, String body) throws FlexmlsApiClientException;
+		protected abstract Response run(String path, String body) throws SparkApiClientException;
 	}
 
 }

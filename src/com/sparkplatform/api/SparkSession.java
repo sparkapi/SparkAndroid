@@ -49,8 +49,8 @@ public class SparkSession extends Session {
 		return accessToken == null || refreshToken == null;
 	}
 	
-	Session authenticate() throws FlexmlsApiClientException {
-		throw new FlexmlsApiClientException("Spark authentication required");
+	Session authenticate() throws SparkApiClientException {
+		throw new SparkApiClientException("Spark authentication required");
 	}
 	
 }

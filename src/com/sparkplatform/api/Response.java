@@ -36,9 +36,9 @@ public class Response {
 	private String message;
 	private boolean success;
 	private JsonNode rootNode;
-	private FlexmlsApiClientException exception;
+	private SparkApiClientException exception;
 	
-	public Response(FlexmlsApiClientException exception) {
+	public Response(SparkApiClientException exception) {
 		super();
 		this.exception = exception;
 	}
@@ -67,10 +67,10 @@ public class Response {
 	 * @param <T> Model type to create
 	 * @param resultClass class object for the model to create
 	 * @return One or more instances of the model based on the JSON response results
-	 * @throws FlexmlsApiClientException if unable to parse the response JSON, or unable to map it 
+	 * @throws SparkApiClientException if unable to parse the response JSON, or unable to map it 
 	 * to the input Model class. 
 	 */
-	public <T> List<T> getResults(Class<T> resultClass) throws FlexmlsApiClientException {
+	public <T> List<T> getResults(Class<T> resultClass) throws SparkApiClientException {
 		try {
 			JsonNode results = rootNode.get("Results");
 			List<T> r = new ArrayList<T>(); 
@@ -84,7 +84,7 @@ public class Response {
 			}
 			return r;
 		} catch (IOException e) {
-			throw new FlexmlsApiClientException("Failure parsing JSON resonse.  The server response may be invalid", e);
+			throw new SparkApiClientException("Failure parsing JSON resonse.  The server response may be invalid", e);
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class Response {
 		this.success = success;
 	}
 	
-	public void checkFailures() throws FlexmlsApiClientException {
+	public void checkFailures() throws SparkApiClientException {
 		if(exception != null){
 			throw exception;
 		}

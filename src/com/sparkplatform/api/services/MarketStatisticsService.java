@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.sparkplatform.api.ApiParameter;
 import com.sparkplatform.api.Client;
-import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.models.MarketStatistic;
 
 public class MarketStatisticsService extends BaseService<MarketStatistic> {
@@ -34,50 +34,50 @@ public class MarketStatisticsService extends BaseService<MarketStatistic> {
 		super(c);
 	}
 	
-	public MarketStatistic absorption() throws FlexmlsApiClientException{
+	public MarketStatistic absorption() throws SparkApiClientException{
 		return absorption(EMPTY);
 	}
-	public MarketStatistic absorption(Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	public MarketStatistic absorption(Map<ApiParameter, String> options) throws SparkApiClientException{
 		return stat("absorption", options);
 	}
 
-	public MarketStatistic inventory() throws FlexmlsApiClientException{
+	public MarketStatistic inventory() throws SparkApiClientException{
 		return inventory(EMPTY);
 	}
-	public MarketStatistic inventory(Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	public MarketStatistic inventory(Map<ApiParameter, String> options) throws SparkApiClientException{
 		return stat("inventory", options);
 	}
 
-	public MarketStatistic price() throws FlexmlsApiClientException{
+	public MarketStatistic price() throws SparkApiClientException{
 		return price(EMPTY);
 	}
-	public MarketStatistic price(Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	public MarketStatistic price(Map<ApiParameter, String> options) throws SparkApiClientException{
 		return stat("price", options);
 	}
 
-	public MarketStatistic ratio() throws FlexmlsApiClientException{
+	public MarketStatistic ratio() throws SparkApiClientException{
 		return ratio(EMPTY);
 	}
-	public MarketStatistic ratio(Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	public MarketStatistic ratio(Map<ApiParameter, String> options) throws SparkApiClientException{
 		return stat("ratio", options);
 	}
 
-	public MarketStatistic dom() throws FlexmlsApiClientException{
+	public MarketStatistic dom() throws SparkApiClientException{
 		return dom(EMPTY);
 	}
-	public MarketStatistic dom(Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	public MarketStatistic dom(Map<ApiParameter, String> options) throws SparkApiClientException{
 		return stat("dom", options);
 	}
 
-	public MarketStatistic volume() throws FlexmlsApiClientException{
+	public MarketStatistic volume() throws SparkApiClientException{
 		return volume(EMPTY);
 	}
-	public MarketStatistic volume(Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	public MarketStatistic volume(Map<ApiParameter, String> options) throws SparkApiClientException{
 		return stat("volume", options);
 	}
 
 
-	private MarketStatistic stat(String type, Map<ApiParameter, String> options) throws FlexmlsApiClientException{
+	private MarketStatistic stat(String type, Map<ApiParameter, String> options) throws SparkApiClientException{
 		return getClient().get(getPath() + "/" + type, options).getResults(MarketStatistic.class).get(0);
 	}
 	

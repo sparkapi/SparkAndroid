@@ -60,14 +60,14 @@ public class ConnectionApacheHttp extends Connection<Response> {
 	}
 	
 	@Override
-	public Response get(String path, Map<String, String> options) throws FlexmlsApiClientException {
+	public Response get(String path, Map<String, String> options) throws SparkApiClientException {
 		HttpRequest r = new HttpGet(path);
 		setHeaders(r);
 		return request(r);
 	}
 	@Override
 	public Response delete(String path, Map<String, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 		HttpRequest r = new HttpDelete(path);
 		setHeaders(r);
 		return request(r);
@@ -75,7 +75,7 @@ public class ConnectionApacheHttp extends Connection<Response> {
 
 	@Override
 	public Response post(String path, String body, Map<String, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 		HttpPost r = new HttpPost(path);
 		setHeaders(r);
 		setData(r, body);
@@ -84,29 +84,29 @@ public class ConnectionApacheHttp extends Connection<Response> {
 	
 	@Override
 	public Response put(String path, String body, Map<String, String> options)
-			throws FlexmlsApiClientException {
+			throws SparkApiClientException {
 		HttpPut r = new HttpPut(path);
 		setHeaders(r);
 		setData(r, body);
 		return request(r);
 	}
 	
-	private static void setData(HttpEntityEnclosingRequestBase r, String body) throws FlexmlsApiClientException{
+	private static void setData(HttpEntityEnclosingRequestBase r, String body) throws SparkApiClientException{
 		HttpEntity data;
 		try {
 			data = new StringEntity(body);
 			r.setEntity(data);
 		} catch (UnsupportedEncodingException e) {
-			throw new FlexmlsApiClientException("Message cannot be sent as the body is encoded in an unsupported format.", e);
+			throw new SparkApiClientException("Message cannot be sent as the body is encoded in an unsupported format.", e);
 		} 
 	}
 
-	protected Response request(HttpRequest r) throws FlexmlsApiClientException {
+	protected Response request(HttpRequest r) throws SparkApiClientException {
 		Response rs = null;
 		try {
 			rs = client.execute(host, r, handler);
 		} catch (Exception e) {
-			throw new FlexmlsApiClientException("Connection failure with HTTP.  Check your url settings.", e);
+			throw new SparkApiClientException("Connection failure with HTTP.  Check your url settings.", e);
 		}
 		rs.checkFailures();
 		return rs;

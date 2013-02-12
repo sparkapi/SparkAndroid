@@ -21,7 +21,7 @@ import java.util.Map;
 
 import com.sparkplatform.api.ApiParameter;
 import com.sparkplatform.api.Client;
-import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.models.Listing;
 
 public class ListingService extends BaseService<Listing> {
@@ -35,10 +35,10 @@ public class ListingService extends BaseService<Listing> {
 		super(c);
 	}
 	
-	public List<Listing> my() throws FlexmlsApiClientException {
+	public List<Listing> my() throws SparkApiClientException {
 		return my(EMPTY);
 	}
-	public List<Listing> my(Map<ApiParameter, String> opts) throws FlexmlsApiClientException {
+	public List<Listing> my(Map<ApiParameter, String> opts) throws SparkApiClientException {
 		return getClient().get("/my" + getPath(), opts).getResults(model());
 	}
 	

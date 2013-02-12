@@ -34,9 +34,9 @@ public abstract class Connection<R> implements HttpActions<R, String> {
 	 * Helper get with no parameters
 	 * @param path request path
 	 * @return Response object
-	 * @throws FlexmlsApiClientException
+	 * @throws SparkApiClientException
 	 */
-	public R get(String path) throws FlexmlsApiClientException {
+	public R get(String path) throws SparkApiClientException {
 		return get(path, EMPT_MAP);
 	}
 	/**
@@ -44,9 +44,9 @@ public abstract class Connection<R> implements HttpActions<R, String> {
 	 * @param path request path
 	 * @param body post data
 	 * @return Response object
-	 * @throws FlexmlsApiClientException
+	 * @throws SparkApiClientException
 	 */
-	public R post(String path, String body) throws FlexmlsApiClientException {
+	public R post(String path, String body) throws SparkApiClientException {
 		return post(path, body, EMPT_MAP);
 	}
 	/**
@@ -54,18 +54,18 @@ public abstract class Connection<R> implements HttpActions<R, String> {
 	 * @param path request path
 	 * @param body post data
 	 * @return Response object
-	 * @throws FlexmlsApiClientException
+	 * @throws SparkApiClientException
 	 */
-	public R put(String path, String body) throws FlexmlsApiClientException {
+	public R put(String path, String body) throws SparkApiClientException {
 		return put(path, body, EMPT_MAP);
 	}
 	/**
 	 * Helper delete with no parameters
 	 * @param path request path
 	 * @return Response object
-	 * @throws FlexmlsApiClientException
+	 * @throws SparkApiClientException
 	 */
-	public R delete(String path) throws FlexmlsApiClientException {
+	public R delete(String path) throws SparkApiClientException {
 		return delete(path, EMPT_MAP);
 	}
 }

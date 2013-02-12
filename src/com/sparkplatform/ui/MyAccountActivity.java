@@ -33,7 +33,7 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.FlexmlsApiClientException;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkClient;
 
@@ -95,7 +95,7 @@ public class MyAccountActivity extends ListActivity {
 	    		 r = SparkClient.getInstance().get("/my/account",null);
 	    		 Log.d(TAG, "success>" + r.isSuccess());
 	    	 }
-	    	 catch(FlexmlsApiClientException e)
+	    	 catch(SparkApiClientException e)
 	    	 {
 	    		 Log.e(TAG, "/my/account exception>", e);
 	    	 }
