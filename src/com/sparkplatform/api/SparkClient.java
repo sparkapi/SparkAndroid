@@ -40,12 +40,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class SparkClient extends Client {
 
-	// constants **************************************************************
+	// configuration **********************************************************
 	
 	public static final String sparkClientKey = "<YOUR OAUTH2 CLIENT KEY>";
 	public static final String sparkClientSecret = "<YOUR OAUTH2 CLIENT SECRET>";
 	public static final String sparkAPIUserAgent = null;
 	public static final String sparkCallbackURL = "https://sparkplatform.com/oauth2/callback";
+	
+	// constants **************************************************************
 	
 	public static final String sparkOpenIdLogoutURL = "https://sparkplatform.com/openid/logout";
 	

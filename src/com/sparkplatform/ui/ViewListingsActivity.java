@@ -109,7 +109,7 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	    	 Map<ApiParameter,String> parameters = new HashMap<ApiParameter,String>();
 	    	 parameters.put(ApiParameter._limit, "50");
 	    	 parameters.put(ApiParameter._expand, "PrimaryPhoto");
-	    	 parameters.put(ApiParameter._select, "ListingId,StreetNumber,StreetDirPrefix,StreetName,StreetDirSuffix,StreetSuffix,BedsTotal,BathsTotal,ListPrice,City,StateOrProvince");
+	    	 parameters.put(ApiParameter._select, "ListingId,StreetNumber,StreetDirPrefix,StreetName,StreetDirSuffix,StreetSuffix,BedsTotal,BathsTotal,ListPrice,City,StateOrProvince,PropertyType");
 	    	 parameters.put(ApiParameter._filter, filter[0]);
 	    	 parameters.put(ApiParameter._orderby, "-ListPrice");
 	    	 

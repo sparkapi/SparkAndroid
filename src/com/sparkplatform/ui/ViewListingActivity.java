@@ -102,10 +102,14 @@ public class ViewListingActivity extends ListActivity {
 		 
 		 ActivityHelper.addListLine(list, ListingFormatter.getListingSubtitle(summaryListing), ListingFormatter.getListingTitle(summaryListing));
 		 
+		 String propertyType = summaryListing.getStandardFields().getPropertyType();
+		 
 		 // set standard fields
 		 JsonNode standardFields = listing.get("StandardFields");
 		 for(StandardField.Field field : sortedStandardFields)
 		 {
+			 if(!field.isMlsVisible(propertyType))
+				 continue;
 			 String key = field.getResourceUri().substring("/v1/standardfields/".length());
 			 JsonNode value = standardFields.get(key);
 			 if(value != null)

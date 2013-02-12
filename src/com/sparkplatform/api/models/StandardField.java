@@ -145,6 +145,14 @@ public class StandardField extends Base {
 			return mlsVisible;
 		}
 		
+		public boolean isMlsVisible(String propertyType) {
+			for(String s : mlsVisible)
+				if(s.equals(propertyType))
+					return true;
+			
+			return false;
+		}
+		
 		public void setMlsVisible(List<String> mlsVisible) {
 			this.mlsVisible = mlsVisible;
 		}
