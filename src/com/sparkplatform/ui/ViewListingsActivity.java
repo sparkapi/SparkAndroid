@@ -27,23 +27,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
 import com.sparkplatform.api.ApiParameter;
-import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.Response;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.models.Listing;
 

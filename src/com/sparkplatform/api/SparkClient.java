@@ -209,8 +209,6 @@ public class SparkClient extends Client {
 			   logger.debug("OAuth2 response>" + responseBody);
 			   sparkSession = mapper.readValue(responseBody, SparkSession.class);
 			   setSession(sparkSession);
-			   Connection<Response> connection = getConnection();
-			   ((ConnectionApacheHttp)connection).setHeaders(getHeaders());
 		   } 
 		   catch (Exception e)
 		   {
@@ -253,8 +251,9 @@ public class SparkClient extends Client {
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("User-Agent", "DreamCommerce Spark Java API 0.1");
 		headers.put("X-SparkApi-User-Agent", "DreamCommerce SparkClient 0.1");
-		if(getSession() != null)
-			headers.put("Authorization", "OAuth " + ((SparkSession)getSession()).getAccessToken());
+		SparkSession session = (SparkSession)getSession();
+		if(session != null && session.getAccessToken() != null)
+			headers.put("Authorization", "OAuth " + session.getAccessToken());
 		return headers;
 	}
 	
@@ -272,6 +271,13 @@ public class SparkClient extends Client {
 		if(options != null)
 			params.putAll(options);
 		return requestPath(path, params);
+	}
+	
+	public void setSession(Session session)
+	{
+		super.setSession(session);
+		Connection<Response> connection = getConnection();
+		((ConnectionApacheHttp)connection).setHeaders(getHeaders());
 	}
 	
 }

@@ -23,6 +23,7 @@ import org.apache.http.NameValuePair;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -142,31 +143,39 @@ public class WebViewActivity extends Activity {
 	 
 	 private void processAuthentication(SparkSession session, String url)
 	 {
-		 if(session.getOpenIdToken() != null)
-		 {
-				List<NameValuePair> params = SparkClient.getURLParams(url);
-				String value = SparkClient.getParameter(params, "openid.ax.value.id");
-				if(value != null)
-					System.setProperty(UIConstants.PROPERTY_OPENID_ID, value);
-				value = SparkClient.getParameter(params, "openid.ax.value.friendly");
-				if(value != null)
-					System.setProperty(UIConstants.PROPERTY_OPENID_FRIENDLY, value);
-				value = SparkClient.getParameter(params, "openid.ax.value.first_name");
-				if(value != null)
-					System.setProperty(UIConstants.PROPERTY_OPENID_FIRST_NAME, value);
-				value = SparkClient.getParameter(params, "openid.ax.value.middle_name");
-				if(value != null)
-					System.setProperty(UIConstants.PROPERTY_OPENID_MIDDLE_NAME, value);
-				value = SparkClient.getParameter(params, "openid.ax.value.last_name");
-				if(value != null)
-					System.setProperty(UIConstants.PROPERTY_OPENID_LAST_NAME, value);
-				value = SparkClient.getParameter(params, "openid.ax.value.email");
-				if(value != null)
-					System.setProperty(UIConstants.PROPERTY_OPENID_EMAIL, value);
-			 
-		 }
-		 else
-		 {
-		 }
+		SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
+		SharedPreferences.Editor editor = p.edit();
+		 
+		if(session.getOpenIdToken() != null)
+		{
+			editor.putString(UIConstants.AUTH_OPENID, session.getOpenIdToken());
+			
+			List<NameValuePair> params = SparkClient.getURLParams(url);
+			String value = SparkClient.getParameter(params, "openid.ax.value.id");
+			if(value != null)
+				editor.putString(UIConstants.PROPERTY_OPENID_ID, value);
+			value = SparkClient.getParameter(params, "openid.ax.value.friendly");
+			if(value != null)
+				editor.putString(UIConstants.PROPERTY_OPENID_FRIENDLY, value);
+			value = SparkClient.getParameter(params, "openid.ax.value.first_name");
+			if(value != null)
+				editor.putString(UIConstants.PROPERTY_OPENID_FIRST_NAME, value);
+			value = SparkClient.getParameter(params, "openid.ax.value.middle_name");
+			if(value != null)
+				editor.putString(UIConstants.PROPERTY_OPENID_MIDDLE_NAME, value);
+			value = SparkClient.getParameter(params, "openid.ax.value.last_name");
+			if(value != null)
+				editor.putString(UIConstants.PROPERTY_OPENID_LAST_NAME, value);
+			value = SparkClient.getParameter(params, "openid.ax.value.email");
+			if(value != null)
+				editor.putString(UIConstants.PROPERTY_OPENID_EMAIL, value);
+		}
+		else
+		{
+			editor.putString(UIConstants.AUTH_ACCESS_TOKEN, session.getAccessToken());
+			editor.putString(UIConstants.AUTH_REFRESH_TOKEN, session.getRefreshToken());
+		}
+		 
+		editor.commit(); 
 	 }
 }

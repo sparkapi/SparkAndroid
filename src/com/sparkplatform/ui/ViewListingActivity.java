@@ -27,24 +27,18 @@ import java.util.TreeMap;
 import org.codehaus.jackson.JsonNode;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import com.sparkplatform.api.ApiParameter;
-import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.Response;
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.models.Listing;
 import com.sparkplatform.api.models.StandardField;
