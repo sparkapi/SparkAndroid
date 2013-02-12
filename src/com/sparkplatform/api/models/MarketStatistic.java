@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -34,10 +35,13 @@ import org.codehaus.jackson.map.deser.DateDeserializer;
 
 
 public class MarketStatistic extends Base {
+	
+	private static final long serialVersionUID = 7L;
+	
 	private static Logger logger = Logger.getLogger(MarketStatistic.class);
 	
 	public static class MDY_DateDeserializer extends DateDeserializer {
-        private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MM/dd/yyyy");
+        private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 		@Override
 		public Date deserialize(JsonParser jsonParser, DeserializationContext ctxt)
 				throws IOException {

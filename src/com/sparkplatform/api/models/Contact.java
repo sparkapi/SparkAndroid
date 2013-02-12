@@ -20,6 +20,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Contact extends ResourceEntity {
 	
+	private static final long serialVersionUID = 3L;
+	
 	@JsonProperty("DisplayName")
 	private String displayName;
 	@JsonProperty("PrimaryEmail")

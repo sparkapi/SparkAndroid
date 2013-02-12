@@ -54,7 +54,6 @@ public class SparkClient extends Client {
 	
 	// class vars *************************************************************
 	
-	private static final String TAG = "SparkClient";
 	private static Logger logger = Logger.getLogger(SparkClient.class);
 	
 	private static SparkClient instance = null;

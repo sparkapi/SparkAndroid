@@ -19,14 +19,18 @@ package com.sparkplatform.api.models;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class OpenHouse extends ResourceEntity {
-    private static final SimpleDateFormat MDY_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	
+	private static final long serialVersionUID = 8L;
+	
+    private static final SimpleDateFormat MDY_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US);
 	private static Logger logger = Logger.getLogger(OpenHouse.class);
 	
 	@JsonProperty("Date")

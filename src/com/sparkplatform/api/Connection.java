@@ -27,7 +27,7 @@ import java.util.Map;
  * @param <R> The response object
  */
 public abstract class Connection<R> implements HttpActions<R, String> {
-	// TODO Make this truly read only.
+
 	private static final Map<String, String> EMPT_MAP = new HashMap<String, String>(); 
 	
 	/**

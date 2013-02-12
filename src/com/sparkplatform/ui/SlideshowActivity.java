@@ -21,7 +21,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -30,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
+@SuppressWarnings("deprecation")
 public class SlideshowActivity extends Activity {
 
 	// instance vars **********************************************************
@@ -38,7 +38,7 @@ public class SlideshowActivity extends Activity {
 
 	// interface **************************************************************
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,7 +93,7 @@ public class SlideshowActivity extends Activity {
             return position;
         }
 
-        public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView == null) {
                 convertView = new ImageView(mContext);

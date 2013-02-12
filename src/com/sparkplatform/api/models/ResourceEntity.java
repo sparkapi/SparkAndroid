@@ -23,6 +23,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class ResourceEntity extends Base {
 
+	private static final long serialVersionUID = 2L;
+	
 	@JsonProperty("Id")
 	private String id;
 	@JsonProperty("ResourceUri")

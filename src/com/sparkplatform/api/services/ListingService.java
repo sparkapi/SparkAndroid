@@ -46,8 +46,6 @@ public class ListingService extends BaseService<Listing> {
 	//
 	// SubResources
 	//
-	// TODO: I don't love this design, especially in comparison to the ruby library.  BUT, it works 
-	// for the time being.
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public DocumentService getDocumentService(Listing l){

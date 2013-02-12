@@ -28,7 +28,6 @@ import org.codehaus.jackson.map.ObjectMapper;
  * JSON client parser for the HTTP response.
  */
 public class JsonResponseHandler implements ResponseHandler<Response> {
-	// TODO When jackson 1.8 is released, investigate using the 
 	private ObjectMapper mapper = new ObjectMapper();
 
 	@Override
@@ -69,7 +68,6 @@ public class JsonResponseHandler implements ResponseHandler<Response> {
 			r.setCode(rootNode.get("Code").getValueAsInt());
 			r.setMessage(rootNode.get("Message").getValueAsText());
 		}
-		// TODO pagination
 		return r;		
 	}
 }

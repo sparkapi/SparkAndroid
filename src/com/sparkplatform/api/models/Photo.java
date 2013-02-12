@@ -19,6 +19,9 @@ package com.sparkplatform.api.models;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Photo extends ResourceEntity {
+	
+	private static final long serialVersionUID = 9L;
+	
 	@JsonProperty("Name")
 	private String name;
 	@JsonProperty("Caption")

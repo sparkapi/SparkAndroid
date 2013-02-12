@@ -27,8 +27,10 @@ import org.codehaus.jackson.annotate.JsonAnySetter;
 /**
  * Top level model for managing JSON entities in the library.
  */
-@SuppressWarnings("serial")
 public class Base implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger logger = Logger.getLogger(Base.class);
 	private Map<String, Object> attributes = new HashMap<String, Object>();
 	

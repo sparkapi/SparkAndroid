@@ -37,6 +37,9 @@ import org.codehaus.jackson.type.JavaType;
 
 @JsonDeserialize(using=StandardField.MapperDeserializer.class)
 public class StandardField extends Base {
+	
+	private static final long serialVersionUID = 11L;
+	
 	@JsonProperty
 	private Map<String, Field> fieldMap = new HashMap<String, StandardField.Field>();
 	
@@ -44,11 +47,9 @@ public class StandardField extends Base {
 	 * The design of the base class didn't anticipate results that are a loose map of results.  In
 	 * this deserializer I work around jackson to explicitly create the mapping and bind it to a 
 	 * class instance.
-	 * 
-	 * TODO I'm probably doing some of this wrong, but haven't looked much into deserializer 
-	 * examples to clean up.
 	 */
 	public static class MapperDeserializer extends JsonDeserializer<StandardField> {
+		@SuppressWarnings("deprecation")
 		@Override
 		public StandardField deserialize(JsonParser jp,
 				DeserializationContext ctxt) throws IOException,
@@ -83,6 +84,9 @@ public class StandardField extends Base {
 	}
 	
 	public static class Field extends Base {
+		
+		private static final long serialVersionUID = 12L;
+		
 		@JsonProperty("Label")
 		private String label;
 		@JsonProperty("Searchable")

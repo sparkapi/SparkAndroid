@@ -17,6 +17,8 @@
 package com.sparkplatform.api.models;
 
 public class SubResourceEntity extends ResourceEntity {
+	
+	private static final long serialVersionUID = 13L;
 
 	private String parentEntity;
 	

@@ -23,6 +23,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Listing extends ResourceEntity {
 	
+	private static final long serialVersionUID = 5L;
+	
 	@JsonProperty("StandardFields")
 	private StandardFields standardFields;
 	
@@ -35,6 +37,9 @@ public class Listing extends ResourceEntity {
 	}
 	
 	public static class StandardFields extends Base {
+		
+		private static final long serialVersionUID = 6L;
+		
 	    @JsonProperty("StreetNumber")
 	    private String streetNumber;
 	    @JsonProperty("Longitude")

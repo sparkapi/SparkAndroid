@@ -58,8 +58,6 @@ public class ConnectionApacheHttps extends ConnectionApacheHttp {
 	
 	/**
 	 * Basic trust manager that accepts everyone.  This should be scoped to the appropriate certificates.
-	 * 
-	 * TODO Restrict trusted certificates and issuers.
 	 *
 	 */
 	public static class FullTrustManager implements X509TrustManager {

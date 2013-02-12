@@ -20,6 +20,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class PropertyType extends Base {
 	
+	private static final long serialVersionUID = 10L;
+	
 	@JsonProperty("MlsName")
 	private String mlsName;
 	@JsonProperty("MlsCode")

@@ -24,6 +24,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class SystemInfo extends Base {
 	
+	private static final long serialVersionUID = 14L;
+	
 	@JsonProperty("Id")
 	private String id;
 	@JsonProperty("OfficeId")
@@ -42,6 +44,8 @@ public class SystemInfo extends Base {
 	private List<SystemInfo.Configuration> configurationList = new ArrayList<SystemInfo.Configuration>();
 
 	public static class Configuration extends Base {
+		
+		private static final long serialVersionUID = 15L;
 		
 		@JsonProperty("MlsLogos")
 		private List<String> mlsLogos;
