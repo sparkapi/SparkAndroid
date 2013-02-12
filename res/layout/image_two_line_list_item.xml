@@ -28,7 +28,9 @@
         android:layout_alignParentRight="true"
         
         android:singleLine="true"
-        android:ellipsize="marquee"/>
+        android:ellipsize="marquee"
+        android:textSize="16sp"
+        android:textColor="#333333"/>
 
     <TextView
         android:id="@+id/line1"
@@ -41,6 +43,9 @@
         android:layout_above="@id/line2"
         android:layout_alignWithParentIfMissing="true"
                 
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical" 
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"/>
 
 </RelativeLayout>

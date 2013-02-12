@@ -2,6 +2,10 @@ package com.sparkplatform.utils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.codehaus.jackson.JsonNode;
 
 import com.sparkplatform.api.models.Listing;
 
@@ -119,5 +123,15 @@ public class ListingFormatter {
 				standardFields.getPhotos() != null &&
 				standardFields.getPhotos().size() > 0 ?
 				standardFields.getPhotos().get(0).getUriThumb() : null;
+	}
+	
+	public static List<String> getListingPhotos(JsonNode listing)
+	{
+		List<String> l = new ArrayList<String>();
+		JsonNode standardFields = listing.get("StandardFields");
+		JsonNode photos = standardFields.get("Photos");
+		for(JsonNode photo : photos)
+			l.add(photo.get("Uri1024").getTextValue());
+		return l;
 	}
 }

@@ -2,27 +2,22 @@
 <resources>
 
     <string name="hello_world">Hello world!</string>
-
     <string name="accessibility_image_description">image</string>
-    
     <string name="app_name">Spark</string>
-    
     <string name="button_spark">Login with Spark</string>
-
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_account">Account</string>
-    <string name="menu_search">Search</string> 
-    
+    <string name="menu_search">Search</string>
+    <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_web_view">Login</string>
     <string name="title_activity_view_listings">View Listings</string>
     <string name="title_activity_my_account">My Account</string>
     <string name="title_activity_view_listing">View Listing</string>
-
     <string name="loginHybrid">Hybrid</string>
     <string name="loginOpenID">OpenID</string>
     <string name="noListings">No Listings Found!</string>
-    
+    <string name="title_activity_slideshow">Slideshow</string>
 
 </resources>

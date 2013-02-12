@@ -1,8 +1,5 @@
 package com.sparkplatform.ui;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +8,6 @@ import java.util.Map;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -142,9 +137,6 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	    			 map.put("line1", ListingFormatter.getListingTitle(l));
 	    			 map.put("line2", ListingFormatter.getListingSubtitle(l));
 	    			 list.add(map);
-	    			 
-	    			 ImageLoaderTask imageLoaderTask = new ImageLoaderTask();
-	    			 imageLoaderTask.imageView = null;
 	    		 }
 
 	    		 ListAdapter adapter = new SimpleImageAdapter(getApplicationContext(), 
@@ -170,37 +162,9 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 		 
 		 public void setViewImage(ImageView v, String value) {
 			 ImageLoaderTask task = new ImageLoaderTask();
-			 task.imageView = v;
+			 task.setImageView(v);
 			 task.execute(value);
 		 }
-	 }
-	 
-	 private class ImageLoaderTask extends AsyncTask<String, Void, Bitmap> {
-		 
-		 private ImageView imageView;
-		 
-	     protected Bitmap doInBackground(String... urlString) {
-
-	    	 try
-	    	 {
-	    		 URL url = new URL(urlString[0]);
-	    		 URLConnection conn = url.openConnection();
-	    		 conn.connect();
-	    		 InputStream inputStream = conn.getInputStream();
-	    		 Bitmap bm = BitmapFactory.decodeStream(inputStream);
-	    		 return bm;
-	    	 }
-	    	 catch(Exception e)
-	    	 {
-	    		 Log.e(TAG, "ImageLoaderTask", e);
-	    		 return null;
-	    	 }
-	     }
-	     
-	     protected void onPostExecute(Bitmap bitmap) {
-	    	 if(bitmap != null)
-	    		 imageView.setImageBitmap(bitmap);
-	     }
 	 }
 	 
 	 // OnQueryTextListener ***************************************************

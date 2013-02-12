@@ -1,5 +1,6 @@
 package com.sparkplatform.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
@@ -58,6 +60,20 @@ public class ViewListingActivity extends ListActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_view_listing, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected (MenuItem item)
+	{
+		if(item.getItemId() == R.id.menu_slideshow)
+		{
+    		Intent intent = new Intent(getApplicationContext(), SlideshowActivity.class);
+     	    intent.putExtra(UIConstants.EXTRA_PHOTOS, (Serializable)ListingFormatter.getListingPhotos(listing));
+    		startActivity(intent);
+			return true;
+		}
+		
+		return false;
 	}
 
 	private void loadViewListing()
