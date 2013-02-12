@@ -1,18 +1,25 @@
 package com.sparkplatform.ui;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -126,27 +133,74 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	    	 try {
 	    		 listings = r.getResults(Listing.class);
 
+	    		 
     			 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
 	    		 for(Listing l : listings)
 	    		 {
 	    			 Map<String,String> map = new HashMap<String,String>();
+	    			 map.put("image", ListingFormatter.getListingPrimaryPhoto(l));
 	    			 map.put("line1", ListingFormatter.getListingTitle(l));
 	    			 map.put("line2", ListingFormatter.getListingSubtitle(l));
 	    			 list.add(map);
+	    			 
+	    			 ImageLoaderTask imageLoaderTask = new ImageLoaderTask();
+	    			 imageLoaderTask.imageView = null;
 	    		 }
 
-	    		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
+	    		 ListAdapter adapter = new SimpleImageAdapter(getApplicationContext(), 
 	    				 list,
-	    				 android.R.layout.two_line_list_item, 
-	    				 new String[] {"line1", "line2"}, 
-	    				 new int[] {android.R.id.text1, android.R.id.text2});
+	    				 R.layout.image_two_line_list_item, 
+	    				 new String[] {"image", "line1", "line2"}, 
+	    				 new int[] {R.id.icon, R.id.line1, R.id.line2});
 	    		 setListAdapter(adapter);
-
+	    		 
+	    		 //setListAdapter(new ListingAdapter(getApplicationContext(),listings));
 	    	 } catch (FlexmlsApiClientException e) {
 	    		 Log.e(TAG,"Listing JSON binding exception", e);
 	    	 }
-
 		 }
+	 }
+	 
+	 public class SimpleImageAdapter extends SimpleAdapter
+	 {
+		 public SimpleImageAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
+		 {
+			 super(context,data,resource,from,to);
+		 }
+		 
+		 public void setViewImage(ImageView v, String value) {
+			 ImageLoaderTask task = new ImageLoaderTask();
+			 task.imageView = v;
+			 task.execute(value);
+		 }
+	 }
+	 
+	 private class ImageLoaderTask extends AsyncTask<String, Void, Bitmap> {
+		 
+		 private ImageView imageView;
+		 
+	     protected Bitmap doInBackground(String... urlString) {
+
+	    	 try
+	    	 {
+	    		 URL url = new URL(urlString[0]);
+	    		 URLConnection conn = url.openConnection();
+	    		 conn.connect();
+	    		 InputStream inputStream = conn.getInputStream();
+	    		 Bitmap bm = BitmapFactory.decodeStream(inputStream);
+	    		 return bm;
+	    	 }
+	    	 catch(Exception e)
+	    	 {
+	    		 Log.e(TAG, "ImageLoaderTask", e);
+	    		 return null;
+	    	 }
+	     }
+	     
+	     protected void onPostExecute(Bitmap bitmap) {
+	    	 if(bitmap != null)
+	    		 imageView.setImageBitmap(bitmap);
+	     }
 	 }
 	 
 	 // OnQueryTextListener ***************************************************

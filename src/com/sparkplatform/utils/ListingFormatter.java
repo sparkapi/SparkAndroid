@@ -111,4 +111,13 @@ public class ListingFormatter {
 		
 		return builder.toString();
 	}
+	
+	public static String getListingPrimaryPhoto(Listing listing)
+	{
+		Listing.StandardFields standardFields = listing.getStandardFields();
+		return standardFields != null && 
+				standardFields.getPhotos() != null &&
+				standardFields.getPhotos().size() > 0 ?
+				standardFields.getPhotos().get(0).getUriThumb() : null;
+	}
 }
