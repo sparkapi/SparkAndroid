@@ -33,6 +33,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.SparkSession;
 
@@ -110,14 +111,25 @@ public class WebViewActivity extends Activity {
 				   new OAuth2PostTask().execute(openIdSparkCode);	   				   
 		    	   return true;
 		    }
-		    else if(!loginHybrid && sparkClient.openIdAuthenticate(url) != null)
+		    else if(!loginHybrid)
 		    {
-	    		processAuthentication((SparkSession)sparkClient.getSession(), url);
-		    	
-	    		Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
-	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    		startActivity(intent);
-	    		return true;
+		    	try
+		    	{
+		    		if(sparkClient.openIdAuthenticate(url) != null)
+		    		{
+		    			processAuthentication((SparkSession)sparkClient.getSession(), url);
+
+		    			Intent intent = new Intent(getApplicationContext(), MyAccountActivity.class);
+		    			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    			startActivity(intent);
+		    			return true;
+		    		}
+		    	}
+		    	catch(SparkApiClientException e)
+		    	{
+		    		Log.e(TAG,"SparkApiClientException", e);
+		    	}
+		    	return false;
 		    }
 
 			return false;
@@ -126,7 +138,17 @@ public class WebViewActivity extends Activity {
 	
 	 private class OAuth2PostTask extends AsyncTask<String, Void, SparkSession> {
 	     protected SparkSession doInBackground(String... openIdSparkCode) {
-	    	 return sparkClient.hybridAuthenticate(openIdSparkCode[0]);
+	    	 SparkSession session = null;
+	    	 try
+	    	 {
+	    		 session = sparkClient.hybridAuthenticate(openIdSparkCode[0]);
+	    	 }
+	    	 catch(SparkApiClientException e)
+	    	 {
+	    		 Log.e(TAG, "SparkApiClientException", e);
+	    	 }
+	    	 
+	    	 return session;
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {	    	 

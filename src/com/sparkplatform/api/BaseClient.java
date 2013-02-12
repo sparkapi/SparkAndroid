@@ -212,7 +212,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		return session;
 	}
 
-	public void setSession(Session session) {
+	public void setSession(Session session) throws SparkApiClientException {
 		this.session = session;
 	}
 

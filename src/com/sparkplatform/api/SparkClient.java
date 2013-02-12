@@ -44,10 +44,12 @@ public class SparkClient extends Client {
 	
 	public static final String sparkClientKey = "<YOUR OAUTH2 CLIENT KEY>";
 	public static final String sparkClientSecret = "<YOUR OAUTH2 CLIENT SECRET>";
+	public static final String sparkAPIUserAgent = null;
 	public static final String sparkCallbackURL = "https://sparkplatform.com/oauth2/callback";
 	
 	public static final String sparkOpenIdLogoutURL = "https://sparkplatform.com/openid/logout";
 	
+	public static final String sparkAPILibrary = "Spark Android API 1.0";
 	public static final String sparkAPIEndpoint = "sparkapi.com";
 	public static final String sparkAPIVersion = "/v1";
 	public static final String sparkOAuth2Grant = "/oauth2/grant";
@@ -185,7 +187,7 @@ public class SparkClient extends Client {
 		return null;
 	}
 	
-	public SparkSession hybridAuthenticate(String openIdSparkCode)
+	public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkApiClientException
 	{
 		   Map<String,String> map = new HashMap<String,String>();
 		   map.put("client_id", SparkClient.sparkClientKey);
@@ -218,7 +220,7 @@ public class SparkClient extends Client {
 		   return sparkSession;
 	}
 
-	public SparkSession openIdAuthenticate(String url)
+	public SparkSession openIdAuthenticate(String url) throws SparkApiClientException
 	{
 		List<NameValuePair> params = getURLParams(url);
 		if(params == null)
@@ -240,17 +242,27 @@ public class SparkClient extends Client {
 	}
 	
 	
-	public static void initSparkHeader(HttpUriRequest httpRequest)
+	public static void initSparkHeader(HttpUriRequest httpRequest) throws SparkApiClientException
 	{		
-		httpRequest.setHeader("User-Agent","DreamCommerce Spark Java API 0.1");
-		httpRequest.setHeader("X-SparkApi-User-Agent","DreamCommerce SparkClient 0.1");
+		Map<String, String> headers = getDefaultHeaders();
+		for(String key : headers.keySet())
+			httpRequest.setHeader(key,headers.get(key));
 	}
 	
-	public Map<String,String> getHeaders()
+	public static Map<String,String> getDefaultHeaders() throws SparkApiClientException
 	{
 		Map<String,String> headers = new HashMap<String,String>();
-		headers.put("User-Agent", "DreamCommerce Spark Java API 0.1");
-		headers.put("X-SparkApi-User-Agent", "DreamCommerce SparkClient 0.1");
+		headers.put("User-Agent", sparkAPILibrary);
+		if(sparkAPIUserAgent == null)
+			throw new SparkApiClientException("Please set the sparkAPIUserAgent for your application!");
+		else
+			headers.put("X-SparkApi-User-Agent", sparkAPIUserAgent);
+		return headers;
+	}
+	
+	public Map<String,String> getHeaders() throws SparkApiClientException
+	{
+		Map<String,String> headers = getDefaultHeaders();
 		SparkSession session = (SparkSession)getSession();
 		if(session != null && session.getAccessToken() != null)
 			headers.put("Authorization", "OAuth " + session.getAccessToken());
@@ -273,7 +285,7 @@ public class SparkClient extends Client {
 		return requestPath(path, params);
 	}
 	
-	public void setSession(Session session)
+	public void setSession(Session session) throws SparkApiClientException
 	{
 		super.setSession(session);
 		Connection<Response> connection = getConnection();

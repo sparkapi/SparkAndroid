@@ -16,44 +16,56 @@
 
 package com.sparkplatform.ui;
 
-import com.sparkplatform.api.SparkClient;
-import com.sparkplatform.api.SparkSession;
-import com.sparkplatform.ui.R;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
+import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.SparkSession;
+
 public class MainActivity extends Activity {
+	
+	private static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
-		String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN, null);
-		String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN, null);
-		String openIdToken = p.getString(UIConstants.AUTH_OPENID, null);
 		Intent intent = null;
-		if(accessToken != null && refreshToken != null)
+		
+		try
 		{
-			SparkSession session = new SparkSession();
-			session.setAccessToken(accessToken);
-			session.setRefreshToken(refreshToken);
-			SparkClient.getInstance().setSession(session);
-			intent = new Intent(this, ViewListingsActivity.class);
+			SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
+			String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN, null);
+			String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN, null);
+			String openIdToken = p.getString(UIConstants.AUTH_OPENID, null);
+			if(accessToken != null && refreshToken != null)
+			{
+				SparkSession session = new SparkSession();
+				session.setAccessToken(accessToken);
+				session.setRefreshToken(refreshToken);
+				SparkClient.getInstance().setSession(session);
+				intent = new Intent(this, ViewListingsActivity.class);
+			}
+			else if(openIdToken != null)
+			{
+				SparkSession session = new SparkSession();
+				session.setOpenIdToken(openIdToken);
+				SparkClient.getInstance().setSession(session);
+				intent = new Intent(this, MyAccountActivity.class);
+			}
+			else
+				intent = new Intent(this, LoginActivity.class);
 		}
-		else if(openIdToken != null)
+		catch(SparkApiClientException e)
 		{
-			SparkSession session = new SparkSession();
-			session.setOpenIdToken(openIdToken);
-			SparkClient.getInstance().setSession(session);
-			intent = new Intent(this, MyAccountActivity.class);
+			Log.e(TAG, "SparkApiClientException", e);
 		}
-		else
-			intent = new Intent(this, LoginActivity.class);
+		
 		startActivity(intent);
 	}
 
