@@ -48,7 +48,6 @@ import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.models.Listing;
 import com.sparkplatform.api.models.StandardField;
-import com.sparkplatform.utils.ListingFormatter;
 
 public class ViewListingActivity extends ListActivity {
 

@@ -46,7 +46,6 @@ import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkClient;
 import com.sparkplatform.api.models.Listing;
-import com.sparkplatform.utils.ListingFormatter;
 
 public class ViewListingsActivity extends ListActivity implements SearchView.OnQueryTextListener {
 	

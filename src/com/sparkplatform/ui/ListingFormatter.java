@@ -14,7 +14,7 @@
 //  limitations under the License.
 //
 
-package com.sparkplatform.utils;
+package com.sparkplatform.ui;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
