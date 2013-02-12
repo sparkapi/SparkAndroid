@@ -27,14 +27,20 @@ import java.util.TreeMap;
 import org.codehaus.jackson.JsonNode;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.sparkplatform.api.ApiParameter;
 import com.sparkplatform.api.FlexmlsApiClientException;
@@ -113,7 +119,7 @@ public class ViewListingActivity extends ListActivity {
 
 		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
 				 list,
-				 android.R.layout.two_line_list_item, 
+				 R.layout.two_line_list_item, 
 				 new String[] {"line1", "line2"}, 
 				 new int[] {android.R.id.text1, android.R.id.text2});
 		 setListAdapter(adapter);

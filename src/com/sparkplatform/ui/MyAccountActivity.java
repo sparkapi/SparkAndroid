@@ -118,7 +118,7 @@ public class MyAccountActivity extends ListActivity {
 
 	    		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
 	    				 list,
-	    				 android.R.layout.two_line_list_item, 
+	    				 R.layout.two_line_list_item, 
 	    				 new String[] {"line1", "line2"}, 
 	    				 new int[] {android.R.id.text1, android.R.id.text2});
 	    		 setListAdapter(adapter);
