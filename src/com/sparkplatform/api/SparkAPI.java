@@ -61,8 +61,8 @@ public class SparkAPI extends Client {
 		if(instance == null)
 		{
 		    Configuration c = new Configuration();
-		    c.setApiKey(SparkAPI.sparkClientKey);
-		    c.setEndpoint(SparkAPI.sparkAPIEndpoint);
+		    c.setApiKey(sparkClientKey);
+		    c.setEndpoint(sparkAPIEndpoint);
 		    c.setSsl(true);
 		    instance = new SparkAPI(c);
 		}
