@@ -34,7 +34,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.SparkApi;
 import com.sparkplatform.api.SparkSession;
 
 public class WebViewActivity extends Activity {
@@ -45,7 +45,7 @@ public class WebViewActivity extends Activity {
 
     // instance vars **********************************************************
     
-    private SparkClient sparkClient;
+    private SparkApi sparkClient;
     private boolean loginHybrid;
     
     // interface **************************************************************
@@ -56,7 +56,7 @@ public class WebViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_web_view);
 		
-	    this.sparkClient = SparkClient.getInstance();
+	    this.sparkClient = SparkApi.getInstance();
 	    
 		Intent intent = getIntent();
 		loginHybrid = intent.getBooleanExtra(UIConstants.EXTRA_LOGIN_HYBRID, true);
@@ -66,7 +66,7 @@ public class WebViewActivity extends Activity {
 		webSettings.setJavaScriptEnabled(true);
 		webView.setWebViewClient(new SparkWebViewClient());
 					    
-		webView.loadUrl(SparkClient.sparkOpenIdLogoutURL);
+		webView.loadUrl(SparkApi.sparkOpenIdLogoutURL);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class WebViewActivity extends Activity {
 	{
 		public void onPageFinished (WebView view, String url)
 		{
-			if(url.equals(SparkClient.sparkOpenIdLogoutURL))
+			if(url.equals(SparkApi.sparkOpenIdLogoutURL))
 			{
 				String loginURL = loginHybrid ? 
 						sparkClient.getSparkHybridOpenIdURLString() : 
@@ -96,7 +96,7 @@ public class WebViewActivity extends Activity {
 			Log.d(TAG, "loadUrl>" + url);
 			
 			String openIdSparkCode = null;
-		    if(loginHybrid && (openIdSparkCode = SparkClient.isHybridAuthorized(url)) != null)
+		    if(loginHybrid && (openIdSparkCode = SparkApi.isHybridAuthorized(url)) != null)
 		    {
 				   Log.d(TAG, "openIdSparkCode>" + openIdSparkCode);
 				   new OAuth2PostTask().execute(openIdSparkCode);	   				   
@@ -163,23 +163,23 @@ public class WebViewActivity extends Activity {
 		{
 			editor.putString(UIConstants.AUTH_OPENID, session.getOpenIdToken());
 			
-			List<NameValuePair> params = SparkClient.getURLParams(url);
-			String value = SparkClient.getParameter(params, "openid.ax.value.id");
+			List<NameValuePair> params = SparkApi.getURLParams(url);
+			String value = SparkApi.getParameter(params, "openid.ax.value.id");
 			if(value != null)
 				editor.putString(UIConstants.PROPERTY_OPENID_ID, value);
-			value = SparkClient.getParameter(params, "openid.ax.value.friendly");
+			value = SparkApi.getParameter(params, "openid.ax.value.friendly");
 			if(value != null)
 				editor.putString(UIConstants.PROPERTY_OPENID_FRIENDLY, value);
-			value = SparkClient.getParameter(params, "openid.ax.value.first_name");
+			value = SparkApi.getParameter(params, "openid.ax.value.first_name");
 			if(value != null)
 				editor.putString(UIConstants.PROPERTY_OPENID_FIRST_NAME, value);
-			value = SparkClient.getParameter(params, "openid.ax.value.middle_name");
+			value = SparkApi.getParameter(params, "openid.ax.value.middle_name");
 			if(value != null)
 				editor.putString(UIConstants.PROPERTY_OPENID_MIDDLE_NAME, value);
-			value = SparkClient.getParameter(params, "openid.ax.value.last_name");
+			value = SparkApi.getParameter(params, "openid.ax.value.last_name");
 			if(value != null)
 				editor.putString(UIConstants.PROPERTY_OPENID_LAST_NAME, value);
-			value = SparkClient.getParameter(params, "openid.ax.value.email");
+			value = SparkApi.getParameter(params, "openid.ax.value.email");
 			if(value != null)
 				editor.putString(UIConstants.PROPERTY_OPENID_EMAIL, value);
 		}

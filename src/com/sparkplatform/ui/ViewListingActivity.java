@@ -37,7 +37,7 @@ import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
 import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.SparkApi;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Response;
 import com.sparkplatform.api.models.Listing;
@@ -135,7 +135,7 @@ public class ViewListingActivity extends ListActivity {
 	    	 Response r = null;
 	    	 try
 	    	 {
-	    		 r = SparkClient.getInstance().get("/listings",parameters);
+	    		 r = SparkApi.getInstance().get("/listings",parameters);
 	    		 Log.d(TAG, "success>" + r.isSuccess());
 	    	 }
 	    	 catch(SparkApiClientException e)
@@ -162,7 +162,7 @@ public class ViewListingActivity extends ListActivity {
 			 Response r = null;
 			 try
 			 {
-				 r = SparkClient.getInstance().get("/standardfields", null);
+				 r = SparkApi.getInstance().get("/standardfields", null);
 				 Log.d(TAG, "success>" + r.isSuccess());
 			 }
 			 catch(SparkApiClientException e)

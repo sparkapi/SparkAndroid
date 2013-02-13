@@ -24,7 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.SparkApi;
 import com.sparkplatform.api.SparkSession;
 
 public class MainActivity extends Activity {
@@ -48,14 +48,14 @@ public class MainActivity extends Activity {
 				SparkSession session = new SparkSession();
 				session.setAccessToken(accessToken);
 				session.setRefreshToken(refreshToken);
-				SparkClient.getInstance().setSession(session);
+				SparkApi.getInstance().setSession(session);
 				intent = new Intent(this, ViewListingsActivity.class);
 			}
 			else if(openIdToken != null)
 			{
 				SparkSession session = new SparkSession();
 				session.setOpenIdToken(openIdToken);
-				SparkClient.getInstance().setSession(session);
+				SparkApi.getInstance().setSession(session);
 				intent = new Intent(this, MyAccountActivity.class);
 			}
 			else
