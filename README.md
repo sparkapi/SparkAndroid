@@ -25,22 +25,6 @@ public class SparkAPI extends Client {
 	public static final String sparkClientSecret = "<YOUR OAUTH2 CLIENT SECRET>";
 	public static final String sparkAPIUserAgent = null;
 	public static final String sparkCallbackURL = "https://sparkplatform.com/oauth2/callback";
-
-	...
-	
-	public static SparkAPI getInstance()
-	{
-		if(instance == null)
-		{
-		    Configuration c = new Configuration();
-		    c.setApiKey(sparkClientKey);
-		    c.setEndpoint(sparkAPIEndpoint);
-		    c.setSsl(true);
-		    instance = new SparkAPI(c);
-		}
-		return instance;
-	}
-}
 ```
 
 ## API Examples
