@@ -4,7 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="accessibility_image_description">image</string>
     <string name="app_name">Spark</string>
-    <string name="button_spark">Login with Spark</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_account">Account</string>
