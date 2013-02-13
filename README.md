@@ -7,12 +7,12 @@ This project includes an example Android app that makes use of `SparkAPI` object
 
 ## Requirements
 
-* Android 4.0 or later (API level 14 | Ice Cream Sandwich)
+* Android 4.0 or later (API level 14 / Ice Cream Sandwich)
 * Eclipse IDE with Android SDK Tools [installed](http://developer.android.com/sdk/installing/index.html).
 
 ## Configuration
 
-Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the SparkAPI.java file (in the com.sparkplatform.api package) and set the `sparkClientKey` and `sparkClientSecret` class variables.  You must also set the `sparkAPIUserAgent` with the name of your app or your API requests will not be accepted.  The `sparkCallbackURL` can also be customized but you most likely will want to use the default value to start.
+Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the [SparkAPI.java](./SparkAndroid/blob/master/src/com/sparkplatform/api/SparkAPI.java) file and set the `sparkClientKey` and `sparkClientSecret` class variables.  You must also set the `sparkAPIUserAgent` with the name of your app or your API requests will not be accepted.  The `sparkCallbackURL` can also be customized but you most likely will want to use the default value to start.
 
 ``` java
 public class SparkAPI extends Client {
@@ -32,53 +32,72 @@ public class SparkAPI extends Client {
 
 ### Authentication
 
-The `SparkAPI` object is designed to work with `UIWebView` and `UIWebViewDelegate` objects to initiate and process Spark authentication.
+The `SparkAPI` object is designed to work with Android `WebView` and `WebViewClient` objects to initiate and process Spark authentication.
 
 **Initiating an Authentication Request**:
 
-* To initiate a Hybrid authentication request, encapsulate the `getSparkHybridOpenIdURL` in a `NSURLRequest` and call `UIWebView loadRequest:`.
+* To initiate a Hybrid authentication request, call `WebView loadUrl()` with `getSparkHybridOpenIdURLString`.
 
-* To initiate an OpenID authentication request, encapsulate the `getSparkOpenIdURL` or `getSparkOpenIdAttributeExchangeURL` in a `NSURLRequest` and call `UIWebView loadRequest:`.
+* To initiate an OpenID authentication request, call `WebView loadUrl()` with `getSparkOpenIdURLString` or `getSparkOpenIdAttributeExchangeURLString`.
 
 **Processing Authentication**:
 
-SparkAPI provides two class methods for processing authentication and returning a SparkAPI object upon success: 
+`SparkAPI` provides methods for processing authentication and setting a `SparkSession` object upon success: 
 
-* **hybridAuthenticate** implements the Spark [OpenID+OAuth 2 Hybrid Protocol](http://www.sparkplatform.com/docs/authentication/openid_oauth2_authentication).
+* **isHybridAuthorized** and **hybridAuthenticate** implement the Spark [OpenID+OAuth 2 Hybrid Protocol](http://www.sparkplatform.com/docs/authentication/openid_oauth2_authentication).
 * **openIdAuthenticate** implements the Spark OpenID [Simple Registration Extension](http://www.sparkplatform.com/docs/authentication/openid_authentication#sreg) or [OpenID Attribute Exchange Extension](http://www.sparkplatform.com/docs/authentication/openid_authentication#ax).
 
-Both utilize callback blocks that receive asynchronous responses from the Spark API on success or failure.
+``` java
+public static String isHybridAuthorized(String url);
 
-``` objective-c
-+ (BOOL) hybridAuthenticate:(NSURLRequest*)request
-             success:(void(^)(SparkAPI* sparkAPI))success
-             failure:(void(^)(NSString* openIdMode, NSString* openIdError, NSError *httpError))failure;
+public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkAPIClientException;
 
-+ (BOOL) openIdAuthenticate:(NSURLRequest*)request
-                         success:(void(^)(SparkAPI* sparkAPI, NSDictionary* parameters))success
-                         failure:(void(^)(NSString* openIdMode, NSString* openIdError))failure;
+public SparkSession openIdAuthenticate(String url) throws SparkAPIClientException;
 ```
 
-These authentication methods are typically placed in a UIWebViewDelegate object to respond to a NSURLRequest generated after the user provides their Spark credentials.  See [LoginViewController.m](./SparkiOS/blob/master/SparkiOS/LoginViewController.m) for an example.
+These authentication methods are typically placed in a `WebViewClient` object to respond to a URL request generated after the user provides their Spark credentials.  See [WebViewActivity.java](./SparkAndroid/blob/master/src/com/sparkplatform/ui/WebViewActivity.java) for an example.
 
 
-``` objective-c
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    if([SparkAPI hybridAuthenticate:request
-                            success:^(SparkAPI *sparkAPI) {
-                                [self processAuthentication:sparkAPI parameters:nil];
-                            }
-                            failure:^(NSString* openIdMode, NSString* openIdError, NSError *httpError) {
-                                NSString* message = nil;
-                                if(openIdMode)
-                                    message = [self handleOpenIdError:openIdMode openIdError:openIdError];
-                                [UIHelper handleFailure:message error:httpError];
-                            }])
-        return NO;
-    else
-        return YES;
-}
+``` java
+		public boolean shouldOverrideUrlLoading (WebView view, String url)
+		{
+		    String openIdSparkCode = null;
+		    if(loginHybrid && (openIdSparkCode = SparkAPI.isHybridAuthorized(url)) != null)
+		    {
+				Log.d(TAG, "openIdSparkCode>" + openIdSparkCode);
+				new OAuth2PostTask().execute(openIdSparkCode);	   				   
+				return true;
+		    }
+
+		    return false;
+		}
+		
+	private class OAuth2PostTask extends AsyncTask<String, Void, SparkSession> {
+	     protected SparkSession doInBackground(String... openIdSparkCode) {
+	    	 SparkSession session = null;
+	    	 try
+	    	 {
+	    		 session = sparkClient.hybridAuthenticate(openIdSparkCode[0]);
+	    	 }
+	    	 catch(SparkAPIClientException e)
+	    	 {
+	    		 Log.e(TAG, "SparkApiClientException", e);
+	    	 }
+	    	 
+	    	 return session;
+	     }
+	     
+	     protected void onPostExecute(SparkSession sparkSession) {	    	 
+	    	if(sparkSession != null)
+	    	{
+	    		processAuthentication(sparkSession, null);
+	    		
+	    		Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
+	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    		startActivity(intent);	  
+	    	}
+		 }
+	 }
 ```
 
 ### Making API calls
