@@ -12,7 +12,7 @@ This project includes an example Android app that makes use of `SparkAPI` object
 
 ## Configuration
 
-Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the [SparkAPI.java](./SparkAndroid/blob/master/src/com/sparkplatform/api/SparkAPI.java) file and set the `sparkClientKey` and `sparkClientSecret` class variables.  You must also set the `sparkAPIUserAgent` with the name of your app or your API requests will not be accepted.  The `sparkCallbackURL` can also be customized but you most likely will want to use the default value to start.
+Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the [SparkAPI.java](./src/com/sparkplatform/api/SparkAPI.java) file and set the `sparkClientKey` and `sparkClientSecret` class variables.  You must also set the `sparkAPIUserAgent` with the name of your app or your API requests will not be accepted.  The `sparkCallbackURL` can also be customized but you most likely will want to use the default value to start.
 
 Get a handle to a `SparkAPI` object via the `getInstance()` singleton static method.  If the instance has not been created, `SparkAPI` will be instantiated and returned with your configuration.
 
