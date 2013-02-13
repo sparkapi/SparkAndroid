@@ -26,7 +26,7 @@ import android.view.View;
 import android.widget.Switch;
 
 public class LoginActivity extends Activity {
-	
+
 	private static final String TAG = "LoginActivity";
 
 	@Override
@@ -41,16 +41,13 @@ public class LoginActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_login, menu);
 		return true;
 	}
-	
+
 	public void sparkLogin(View view) {
 		Log.d(TAG, "sparkLogin");
-	
-	    Intent intent = new Intent(this, WebViewActivity.class);
-	    Switch s = (Switch) findViewById(R.id.switch1);
-	    intent.putExtra(UIConstants.EXTRA_LOGIN_HYBRID, s.isChecked());
-	    startActivity(intent);
+
+		Intent intent = new Intent(this, WebViewActivity.class);
+		Switch s = (Switch) findViewById(R.id.switch1);
+		intent.putExtra(UIConstants.EXTRA_LOGIN_HYBRID, s.isChecked());
+		startActivity(intent);
 	}
-	
-
-
 }

@@ -181,6 +181,7 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	 
 	 public boolean onQueryTextSubmit (String query)
 	 {
+		 setListAdapter(null);
 		 this.searchView.clearFocus();
 		 new SearchListingsTask().execute(query);
 		 return true;
