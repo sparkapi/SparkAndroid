@@ -16,17 +16,40 @@
 
 package com.sparkplatform.ui;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.codehaus.jackson.JsonNode;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import android.util.Log;
 
 import com.sparkplatform.api.models.Listing;
+import com.sparkplatform.api.models.StandardField;
 
 public class ListingFormatter {
 	
+	// constants **************************************************************
+	
+	private static final String TAG = "ListingFormatter";
+	
+	// class vars *************************************************************
+	
+	private static final DateFormat parseDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+	private static final DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
+	
+	private static final DateTimeFormatter parseDateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	private static final DateFormat dateTimeFormat = new SimpleDateFormat("M/d/yyyy h:mm a", Locale.US);
+
+
 	private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
 	private static final NumberFormat oneDecimalFormat = new DecimalFormat("0.0");
 	
@@ -35,6 +58,8 @@ public class ListingFormatter {
 		currencyFormat.setMaximumFractionDigits(0);
 	}
 
+	// interface **************************************************************
+	
 	public static String getListingTitle(Listing listing)
 	{
 		if(listing == null)
@@ -102,6 +127,38 @@ public class ListingFormatter {
 			builder.append(formatPriceShort(dValue));
 		
 		return builder.toString();		
+	}
+	
+	public static String formatField(StandardField.Field field, JsonNode value)
+	{
+		if(field.getType() == StandardField.Type.Date)
+		{
+			String s;
+
+			try
+			{
+				s = dateFormat.format(parseDateFormat.parse(value.getValueAsText()));
+			}
+			catch(ParseException e)
+			{
+				Log.e(TAG, "formatField", e);
+				s = value.getValueAsText();
+			}
+			
+			return s;
+		}
+		else if(field.getType() == StandardField.Type.Datetime)
+		{
+			String s = value.getValueAsText();
+			if(s != null && !"null".equals(s))
+			{
+				DateTime dateTime = parseDateTimeFormat.parseDateTime(s);
+				return dateTimeFormat.format(dateTime.toDate());
+			}
+			else
+				return null;
+		}
+		return value.getValueAsText();
 	}
 	
 	private static String formatPriceShort(Double price)

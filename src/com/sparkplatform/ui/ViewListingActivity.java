@@ -113,7 +113,7 @@ public class ViewListingActivity extends ListActivity {
 			 String key = field.getResourceUri().substring("/v1/standardfields/".length());
 			 JsonNode value = standardFields.get(key);
 			 if(value != null)
-				 ActivityHelper.addListLine(list, field.getLabel(), value.getValueAsText());
+				 ActivityHelper.addListLine(list, field.getLabel(), ListingFormatter.formatField(field, value));
 		 }
 
 		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
