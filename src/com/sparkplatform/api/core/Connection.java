@@ -19,7 +19,7 @@ package com.sparkplatform.api.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkAPIClientException;
 
 /**
  * HTTP Abstraction layer for the API.  Implementations are responsible for performing the HTTP 
@@ -36,9 +36,9 @@ public abstract class Connection<R> implements HttpActions<R, String> {
 	 * Helper get with no parameters
 	 * @param path request path
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	public R get(String path) throws SparkApiClientException {
+	public R get(String path) throws SparkAPIClientException {
 		return get(path, EMPT_MAP);
 	}
 	/**
@@ -46,9 +46,9 @@ public abstract class Connection<R> implements HttpActions<R, String> {
 	 * @param path request path
 	 * @param body post data
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	public R post(String path, String body) throws SparkApiClientException {
+	public R post(String path, String body) throws SparkAPIClientException {
 		return post(path, body, EMPT_MAP);
 	}
 	/**
@@ -56,18 +56,18 @@ public abstract class Connection<R> implements HttpActions<R, String> {
 	 * @param path request path
 	 * @param body post data
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	public R put(String path, String body) throws SparkApiClientException {
+	public R put(String path, String body) throws SparkAPIClientException {
 		return put(path, body, EMPT_MAP);
 	}
 	/**
 	 * Helper delete with no parameters
 	 * @param path request path
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	public R delete(String path) throws SparkApiClientException {
+	public R delete(String path) throws SparkAPIClientException {
 		return delete(path, EMPT_MAP);
 	}
 }

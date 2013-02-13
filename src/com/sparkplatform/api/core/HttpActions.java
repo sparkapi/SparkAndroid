@@ -18,7 +18,7 @@ package com.sparkplatform.api.core;
 
 import java.util.Map;
 
-import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkAPIClientException;
 
 /**
  * All the supported HTTP actions
@@ -33,33 +33,33 @@ public interface HttpActions<T, U> {
 	 * @param path request path
 	 * @param options request parameters
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	T get(String path, Map<U, String> options) throws SparkApiClientException;
+	T get(String path, Map<U, String> options) throws SparkAPIClientException;
 	/**
 	 * HTTP Delete
 	 * @param path request path
 	 * @param options request parameters
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	T delete(String path, Map<U, String> options)throws SparkApiClientException;
+	T delete(String path, Map<U, String> options)throws SparkAPIClientException;
 	/**
 	 * HTTP Post
 	 * @param path request path
 	 * @param body post data
 	 * @param options request parameters
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	T post(String path, String body, Map<U, String> options)throws SparkApiClientException;
+	T post(String path, String body, Map<U, String> options)throws SparkAPIClientException;
 	/**
 	 * HTTP Put
 	 * @param path request path
 	 * @param body post data
 	 * @param options request parameters
 	 * @return Response object
-	 * @throws SparkApiClientException
+	 * @throws SparkAPIClientException
 	 */
-	T put(String path, String body, Map<U, String> options)throws SparkApiClientException;
+	T put(String path, String body, Map<U, String> options)throws SparkAPIClientException;
 }

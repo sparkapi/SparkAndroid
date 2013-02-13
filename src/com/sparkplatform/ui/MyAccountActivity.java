@@ -33,8 +33,8 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkApi;
+import com.sparkplatform.api.SparkAPIClientException;
+import com.sparkplatform.api.SparkAPI;
 import com.sparkplatform.api.core.Response;
 
 public class MyAccountActivity extends ListActivity {
@@ -48,7 +48,7 @@ public class MyAccountActivity extends ListActivity {
 		
 		getListView().setEmptyView(findViewById(R.id.myAccountProgressBar));
 
-		if(SparkApi.getInstance().isHybridSession())
+		if(SparkAPI.getInstance().isHybridSession())
 			new MyAccountTask().execute();
 		else
 			buildOpenIDListAdapter();
@@ -98,9 +98,9 @@ public class MyAccountActivity extends ListActivity {
 	    	 Response r = null;
 	    	 try
 	    	 {
-	    		 r = SparkApi.getInstance().get("/my/account",null);
+	    		 r = SparkAPI.getInstance().get("/my/account",null);
 	    	 }
-	    	 catch(SparkApiClientException e)
+	    	 catch(SparkAPIClientException e)
 	    	 {
 	    		 Log.e(TAG, "/my/account exception>", e);
 	    	 }

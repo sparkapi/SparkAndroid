@@ -19,7 +19,7 @@ package com.sparkplatform.api.services;
 import java.util.HashMap;
 import java.util.List;
 
-import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Client;
 import com.sparkplatform.api.models.PropertyType;
@@ -35,7 +35,7 @@ public class StandardFieldService extends BaseService<StandardField> {
 	public StandardFieldService(Client c) {
 		super(c);
 	}
-	public List<StandardField> nearby(String latititude, String longitued, String expand, PropertyType first, PropertyType ... types) throws SparkApiClientException{
+	public List<StandardField> nearby(String latititude, String longitued, String expand, PropertyType first, PropertyType ... types) throws SparkAPIClientException{
 		StringBuffer buffer = new StringBuffer(getPath()).append("/nearby/").append(first.getMlsCode());
 		for (PropertyType propertyType : types) {
 			buffer.append(",").append(propertyType.getMlsCode());

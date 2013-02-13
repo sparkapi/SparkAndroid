@@ -36,8 +36,8 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkApi;
+import com.sparkplatform.api.SparkAPIClientException;
+import com.sparkplatform.api.SparkAPI;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Response;
 import com.sparkplatform.api.models.Listing;
@@ -135,10 +135,10 @@ public class ViewListingActivity extends ListActivity {
 	    	 Response r = null;
 	    	 try
 	    	 {
-	    		 r = SparkApi.getInstance().get("/listings",parameters);
+	    		 r = SparkAPI.getInstance().get("/listings",parameters);
 	    		 Log.d(TAG, "success>" + r.isSuccess());
 	    	 }
-	    	 catch(SparkApiClientException e)
+	    	 catch(SparkAPIClientException e)
 	    	 {
 	    		 Log.e(TAG, "/listings exception>", e);
 	    	 }
@@ -162,10 +162,10 @@ public class ViewListingActivity extends ListActivity {
 			 Response r = null;
 			 try
 			 {
-				 r = SparkApi.getInstance().get("/standardfields", null);
+				 r = SparkAPI.getInstance().get("/standardfields", null);
 				 Log.d(TAG, "success>" + r.isSuccess());
 			 }
-			 catch(SparkApiClientException e)
+			 catch(SparkAPIClientException e)
 			 {
 				 Log.e(TAG, "/standardfields exception>", e);
 			 }
@@ -200,7 +200,7 @@ public class ViewListingActivity extends ListActivity {
 				
 				if(listing != null && sortedStandardFields != null)
 					loadViewListing();
-			} catch (SparkApiClientException e) {
+			} catch (SparkAPIClientException e) {
 	    		 Log.e(TAG,"StandardField JSON binding exception", e);
 			}
 		 }

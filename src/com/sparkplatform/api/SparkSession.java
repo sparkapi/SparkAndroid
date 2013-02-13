@@ -59,8 +59,8 @@ public class SparkSession extends Session {
 		return accessToken == null || refreshToken == null;
 	}
 	
-	Session authenticate() throws SparkApiClientException {
-		throw new SparkApiClientException("Spark authentication required");
+	Session authenticate() throws SparkAPIClientException {
+		throw new SparkAPIClientException("Spark authentication required");
 	}
 	
 }

@@ -19,7 +19,7 @@ package com.sparkplatform.api.services;
 import java.util.List;
 import java.util.Map;
 
-import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Client;
 import com.sparkplatform.api.models.Listing;
@@ -35,10 +35,10 @@ public class ListingService extends BaseService<Listing> {
 		super(c);
 	}
 	
-	public List<Listing> my() throws SparkApiClientException {
+	public List<Listing> my() throws SparkAPIClientException {
 		return my(EMPTY);
 	}
-	public List<Listing> my(Map<ApiParameter, String> opts) throws SparkApiClientException {
+	public List<Listing> my(Map<ApiParameter, String> opts) throws SparkAPIClientException {
 		return getClient().get("/my" + getPath(), opts).getResults(model());
 	}
 	

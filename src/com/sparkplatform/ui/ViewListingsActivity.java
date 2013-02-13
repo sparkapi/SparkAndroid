@@ -36,8 +36,8 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkApi;
+import com.sparkplatform.api.SparkAPIClientException;
+import com.sparkplatform.api.SparkAPI;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Response;
 import com.sparkplatform.api.models.Listing;
@@ -116,10 +116,10 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	    	 Response r = null;
 	    	 try
 	    	 {
-	    		 r = SparkApi.getInstance().get("/listings",parameters);
+	    		 r = SparkAPI.getInstance().get("/listings",parameters);
 	    		 Log.d(TAG, "success>" + r.isSuccess());
 	    	 }
-	    	 catch(SparkApiClientException e)
+	    	 catch(SparkAPIClientException e)
 	    	 {
 	    		 Log.e(TAG, "/listings exception>", e);
 	    	 }
@@ -152,7 +152,7 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	    		 setListAdapter(adapter);
 	    		 
 	    		 //setListAdapter(new ListingAdapter(getApplicationContext(),listings));
-	    	 } catch (SparkApiClientException e) {
+	    	 } catch (SparkAPIClientException e) {
 	    		 Log.e(TAG,"Listing JSON binding exception", e);
 	    	 }
 		 }

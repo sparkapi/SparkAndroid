@@ -27,8 +27,8 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
-import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkApiException;
+import com.sparkplatform.api.SparkAPIClientException;
+import com.sparkplatform.api.SparkAPIException;
 
 /**
  * Client class for communicating with the flexmls restful interface.  Abstracts the HTTP,
@@ -71,10 +71,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response get(String path, Map<U, String> options)
-			throws SparkApiClientException {
+			throws SparkAPIClientException {
 				return new ReAuthable("GET", path, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws SparkApiClientException {
+					public Response run(String path, String body) throws SparkAPIClientException {
 						return connection.get(path);
 					}
 				}.execute();
@@ -82,10 +82,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response post(String path, String body, Map<U, String> options)
-			throws SparkApiClientException {
+			throws SparkAPIClientException {
 				return new ReAuthable("POST", path, body, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws SparkApiClientException {
+					public Response run(String path, String body) throws SparkAPIClientException {
 						return connection.post(path,body);
 					}
 				}.execute();
@@ -93,10 +93,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response put(String path, String body, Map<U, String> options)
-			throws SparkApiClientException {
+			throws SparkAPIClientException {
 				return new ReAuthable("PUT", path, body, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws SparkApiClientException {
+					public Response run(String path, String body) throws SparkAPIClientException {
 						return connection.put(path,body);
 					}
 				}.execute();
@@ -104,10 +104,10 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 
 	@Override
 	public Response delete(String path, Map<U, String> options)
-			throws SparkApiClientException {
+			throws SparkAPIClientException {
 				return new ReAuthable("DELETE", path, stringifyParameterKeys(options)) {
 					@Override
-					public Response run(String path, String body) throws SparkApiClientException {
+					public Response run(String path, String body) throws SparkAPIClientException {
 						return connection.delete(path);
 					}
 				}.execute();
@@ -121,13 +121,13 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		}
 	}
 
-	protected void reauth() throws SparkApiClientException {
+	protected void reauth() throws SparkAPIClientException {
 		if(session == null || session.isExpired()){
 			authenticate();
 		}
 	}
 
-	protected Session authenticate() throws SparkApiClientException {
+	protected Session authenticate() throws SparkAPIClientException {
 		StringBuffer b = new StringBuffer(config.getApiSecret());
 		b.append("ApiKey").append(config.getApiKey());
 		String signature = sign(b.toString());
@@ -136,7 +136,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		Response response = secure.post(path,"");
 		List<Session> sessions = response.getResults(Session.class);
 		if(sessions.isEmpty()){
-			throw new SparkApiClientException("Service error.  No session returned for service authentication.");
+			throw new SparkAPIClientException("Service error.  No session returned for service authentication.");
 		}
 		Session s = sessions.get(0);
 		setSession(s);
@@ -215,7 +215,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		return session;
 	}
 
-	public void setSession(Session session) throws SparkApiClientException {
+	public void setSession(Session session) throws SparkAPIClientException {
 		this.session = session;
 	}
 
@@ -250,7 +250,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		public ReAuthable(String command, String path, Map<String, String> options) {
 			this(command, path, "", options);
 		}
-		public Response execute() throws SparkApiClientException {
+		public Response execute() throws SparkAPIClientException {
 			reauth();
 			String apiPath = setupRequest(path, body, options);
 			log(command, apiPath);
@@ -258,7 +258,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 			while(retries <= MAX_RETRIES){
 				try {
 					return run(apiPath, body);
-				} catch (SparkApiException e) {
+				} catch (SparkAPIException e) {
 					if(retries <= MAX_RETRIES && ApiCode.SESSION_EXPIRED.equals(e.getCode())){
 						authenticate();
 					}
@@ -268,9 +268,9 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 				}
 				retries++;
 			}
-			throw new SparkApiClientException("Session expired and maximum number of authentication attempts reached.");
+			throw new SparkAPIClientException("Session expired and maximum number of authentication attempts reached.");
 		}
-		protected abstract Response run(String path, String body) throws SparkApiClientException;
+		protected abstract Response run(String path, String body) throws SparkAPIClientException;
 	}
 
 }

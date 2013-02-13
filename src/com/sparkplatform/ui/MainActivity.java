@@ -23,8 +23,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
-import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkApi;
+import com.sparkplatform.api.SparkAPIClientException;
+import com.sparkplatform.api.SparkAPI;
 import com.sparkplatform.api.SparkSession;
 
 public class MainActivity extends Activity {
@@ -48,20 +48,20 @@ public class MainActivity extends Activity {
 				SparkSession session = new SparkSession();
 				session.setAccessToken(accessToken);
 				session.setRefreshToken(refreshToken);
-				SparkApi.getInstance().setSession(session);
+				SparkAPI.getInstance().setSession(session);
 				intent = new Intent(this, ViewListingsActivity.class);
 			}
 			else if(openIdToken != null)
 			{
 				SparkSession session = new SparkSession();
 				session.setOpenIdToken(openIdToken);
-				SparkApi.getInstance().setSession(session);
+				SparkAPI.getInstance().setSession(session);
 				intent = new Intent(this, MyAccountActivity.class);
 			}
 			else
 				intent = new Intent(this, LoginActivity.class);
 		}
-		catch(SparkApiClientException e)
+		catch(SparkAPIClientException e)
 		{
 			Log.e(TAG, "SparkApiClientException", e);
 		}

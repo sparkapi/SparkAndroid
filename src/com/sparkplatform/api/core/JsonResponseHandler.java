@@ -24,7 +24,7 @@ import org.apache.http.client.ResponseHandler;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkAPIClientException;
 
 /**
  * JSON client parser for the HTTP response.
@@ -40,7 +40,7 @@ public class JsonResponseHandler implements ResponseHandler<Response> {
 			int statusCode = response.getStatusLine().getStatusCode();
 			r = parseResponse(content, statusCode);
 		} catch (IOException e) {
-			r = new Response(new SparkApiClientException("Failure parsing JSON resonse.  The server response may be invalid", e));
+			r = new Response(new SparkAPIClientException("Failure parsing JSON resonse.  The server response may be invalid", e));
 		}
 		return r;
 	}

@@ -24,8 +24,8 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.sparkplatform.api.SparkApiClientException;
-import com.sparkplatform.api.SparkApiException;
+import com.sparkplatform.api.SparkAPIClientException;
+import com.sparkplatform.api.SparkAPIException;
 
 
 /**
@@ -39,9 +39,9 @@ public class Response {
 	private String message;
 	private boolean success;
 	private JsonNode rootNode;
-	private SparkApiClientException exception;
+	private SparkAPIClientException exception;
 	
-	public Response(SparkApiClientException exception) {
+	public Response(SparkAPIClientException exception) {
 		super();
 		this.exception = exception;
 	}
@@ -70,10 +70,10 @@ public class Response {
 	 * @param <T> Model type to create
 	 * @param resultClass class object for the model to create
 	 * @return One or more instances of the model based on the JSON response results
-	 * @throws SparkApiClientException if unable to parse the response JSON, or unable to map it 
+	 * @throws SparkAPIClientException if unable to parse the response JSON, or unable to map it 
 	 * to the input Model class. 
 	 */
-	public <T> List<T> getResults(Class<T> resultClass) throws SparkApiClientException {
+	public <T> List<T> getResults(Class<T> resultClass) throws SparkAPIClientException {
 		try {
 			JsonNode results = rootNode.get("Results");
 			List<T> r = new ArrayList<T>(); 
@@ -87,7 +87,7 @@ public class Response {
 			}
 			return r;
 		} catch (IOException e) {
-			throw new SparkApiClientException("Failure parsing JSON resonse.  The server response may be invalid", e);
+			throw new SparkAPIClientException("Failure parsing JSON resonse.  The server response may be invalid", e);
 		}
 	}
 	
@@ -115,12 +115,12 @@ public class Response {
 		this.success = success;
 	}
 	
-	public void checkFailures() throws SparkApiClientException {
+	public void checkFailures() throws SparkAPIClientException {
 		if(exception != null){
 			throw exception;
 		}
 		if(!isSuccess()){
-			throw new SparkApiException(getMessage(), ApiCode.get(getCode()), getStatus());
+			throw new SparkAPIException(getMessage(), ApiCode.get(getCode()), getStatus());
 		}
 	}
 	public int getStatus() {

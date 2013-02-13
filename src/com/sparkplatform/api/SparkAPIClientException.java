@@ -19,14 +19,14 @@ package com.sparkplatform.api;
 /**
  * General client exceptions
  */
-public class SparkApiClientException extends Exception {
+public class SparkAPIClientException extends Exception {
 	private static final long serialVersionUID = 2689086275082482561L;
 
-	public SparkApiClientException(String message, Throwable cause) {
+	public SparkAPIClientException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public SparkApiClientException(String message) {
+	public SparkAPIClientException(String message) {
 		super(message);
 	}
 

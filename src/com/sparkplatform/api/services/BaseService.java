@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Client;
 import com.sparkplatform.api.models.Base;
@@ -45,21 +45,21 @@ public abstract class BaseService<T extends Base> {
 		return c;
 	}
 
-	public T get(String id) throws SparkApiClientException {
+	public T get(String id) throws SparkAPIClientException {
 		return get(id, EMPTY);
 	}
 
 	public T get(String id, Map<ApiParameter, String> options)
-			throws SparkApiClientException {
+			throws SparkAPIClientException {
 		return c.get(getPath(id), options).getResults(model()).get(0);
 	}
 
-	public List<T> find() throws SparkApiClientException {
+	public List<T> find() throws SparkAPIClientException {
 		return find(EMPTY);
 	}
 
 	public List<T> find(Map<ApiParameter, String> options)
-			throws SparkApiClientException {
+			throws SparkAPIClientException {
 		return c.get(getPath(), options).getResults(model());
 	}
 

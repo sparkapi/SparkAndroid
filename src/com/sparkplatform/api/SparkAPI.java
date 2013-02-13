@@ -29,7 +29,7 @@ import com.sparkplatform.api.core.ConnectionApacheHttp;
 import com.sparkplatform.api.core.Response;
 import com.sparkplatform.api.core.Session;
 
-public class SparkApi extends Client {
+public class SparkAPI extends Client {
 
 	// configuration **********************************************************
 	
@@ -49,31 +49,31 @@ public class SparkApi extends Client {
 	
 	// class vars *************************************************************
 	
-	private static Logger logger = Logger.getLogger(SparkApi.class);
+	private static Logger logger = Logger.getLogger(SparkAPI.class);
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	
-	private static SparkApi instance = null;
+	private static SparkAPI instance = null;
 	
 	// class interface ********************************************************
 
-	public static SparkApi getInstance()
+	public static SparkAPI getInstance()
 	{
 		if(instance == null)
 		{
 		    Configuration c = new Configuration();
-		    c.setApiKey(SparkApi.sparkClientKey);
-		    c.setEndpoint(SparkApi.sparkAPIEndpoint);
+		    c.setApiKey(SparkAPI.sparkClientKey);
+		    c.setEndpoint(SparkAPI.sparkAPIEndpoint);
 		    c.setSsl(true);
-		    instance = new SparkApi(c);
+		    instance = new SparkAPI(c);
 		}
 		return instance;
 	}
 	
-	private SparkApi(Configuration config) {
+	private SparkAPI(Configuration config) {
 		super(config);
 	}
 	
-	private SparkApi(Configuration config, Connection<Response> defaultConnection, Connection<Response> secureConnection) {
+	private SparkAPI(Configuration config, Connection<Response> defaultConnection, Connection<Response> secureConnection) {
 		super(config, defaultConnection, secureConnection);
 	}
 
@@ -152,20 +152,20 @@ public class SparkApi extends Client {
 	       (openIdSparkCode = getParameter(params,"openid.spark.code")) != null) ? openIdSparkCode : null;
 	}
 	
-	public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkApiClientException
+	public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkAPIClientException
 	{
 		   Map<String,String> map = new HashMap<String,String>();
-		   map.put("client_id", SparkApi.sparkClientKey);
-		   map.put("client_secret", SparkApi.sparkClientSecret);
+		   map.put("client_id", SparkAPI.sparkClientKey);
+		   map.put("client_secret", SparkAPI.sparkClientSecret);
 		   map.put("grant_type", "authorization_code");
 		   map.put("code", openIdSparkCode);
-		   map.put("redirect_uri", SparkApi.sparkCallbackURL);
+		   map.put("redirect_uri", SparkAPI.sparkCallbackURL);
 		   
 		   SparkSession sparkSession = null;
 		   try
 		   {
-			   HttpPost post = new HttpPost(SparkApi.getSparkOAuth2GrantString());
-			   SparkApi.initSparkHeader(post);
+			   HttpPost post = new HttpPost(SparkAPI.getSparkOAuth2GrantString());
+			   SparkAPI.initSparkHeader(post);
 			   StringEntity stringEntity = new StringEntity(objectMapper.writeValueAsString(map));
 			   stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
 			   post.setEntity(stringEntity);
@@ -184,7 +184,7 @@ public class SparkApi extends Client {
 		   return sparkSession;
 	}
 
-	public SparkSession openIdAuthenticate(String url) throws SparkApiClientException
+	public SparkSession openIdAuthenticate(String url) throws SparkAPIClientException
 	{
 		List<NameValuePair> params = getURLParams(url);
 		if(params == null)
@@ -206,24 +206,24 @@ public class SparkApi extends Client {
 	}
 	
 	
-	protected Session authenticate() throws SparkApiClientException 
+	protected Session authenticate() throws SparkAPIClientException 
 	{
 		Map<String,String> map = new HashMap<String,String>();
-		map.put("client_id", SparkApi.sparkClientKey);
-		map.put("client_secret", SparkApi.sparkClientSecret);
+		map.put("client_id", SparkAPI.sparkClientKey);
+		map.put("client_secret", SparkAPI.sparkClientSecret);
 		map.put("grant_type", "refresh_token");
 		map.put("refresh_token", getSparkSession().getRefreshToken());
-		map.put("redirect_uri", SparkApi.sparkCallbackURL);
+		map.put("redirect_uri", SparkAPI.sparkCallbackURL);
 
 		Response response = null;
 		try {
 			response = getConnection().post(getSparkOAuth2GrantString(),objectMapper.writeValueAsString(map));
 		} catch (Exception e) {
-			throw new SparkApiClientException("Session mapping error",e);
+			throw new SparkAPIClientException("Session mapping error",e);
 		}
 		List<SparkSession> sessions = response.getResults(SparkSession.class);
 		if(sessions.isEmpty()){
-			throw new SparkApiClientException("Service error.  No session returned for service authentication.");
+			throw new SparkAPIClientException("Service error.  No session returned for service authentication.");
 		}
 		Session s = sessions.get(0);
 		setSession(s);
@@ -252,25 +252,25 @@ public class SparkApi extends Client {
 		return null;
 	}
 	
-	public static void initSparkHeader(HttpUriRequest httpRequest) throws SparkApiClientException
+	public static void initSparkHeader(HttpUriRequest httpRequest) throws SparkAPIClientException
 	{		
 		Map<String, String> headers = getDefaultHeaders();
 		for(String key : headers.keySet())
 			httpRequest.setHeader(key,headers.get(key));
 	}
 	
-	public static Map<String,String> getDefaultHeaders() throws SparkApiClientException
+	public static Map<String,String> getDefaultHeaders() throws SparkAPIClientException
 	{
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("User-Agent", sparkAPILibrary);
 		if(sparkAPIUserAgent == null)
-			throw new SparkApiClientException("Please set the sparkAPIUserAgent for your application!");
+			throw new SparkAPIClientException("Please set the sparkAPIUserAgent for your application!");
 		else
 			headers.put("X-SparkApi-User-Agent", sparkAPIUserAgent);
 		return headers;
 	}
 	
-	public Map<String,String> getHeaders() throws SparkApiClientException
+	public Map<String,String> getHeaders() throws SparkAPIClientException
 	{
 		Map<String,String> headers = getDefaultHeaders();
 		SparkSession session = (SparkSession)getSession();
@@ -304,7 +304,7 @@ public class SparkApi extends Client {
 		return requestPath(path, params);
 	}
 	
-	public void setSession(Session session) throws SparkApiClientException
+	public void setSession(Session session) throws SparkAPIClientException
 	{
 		super.setSession(session);
 		Connection<Response> connection = getConnection();
