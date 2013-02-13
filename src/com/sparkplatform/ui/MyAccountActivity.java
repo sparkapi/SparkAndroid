@@ -99,7 +99,6 @@ public class MyAccountActivity extends ListActivity {
 	    	 try
 	    	 {
 	    		 r = SparkClient.getInstance().get("/my/account",null);
-	    		 Log.d(TAG, "success>" + r.isSuccess());
 	    	 }
 	    	 catch(SparkApiClientException e)
 	    	 {

@@ -1,24 +1,9 @@
 package com.sparkplatform.api;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-//
-//Copyright (c) 2013 Financial Business Systems, Inc. All rights reserved.
-//
-//Licensed under the Apache License, Version 2.0 (the "License");
-//you may not use this file except in compliance with the License.
-//You may obtain a copy of the License at
-//
-//http://www.apache.org/licenses/LICENSE-2.0
-//
-//Unless required by applicable law or agreed to in writing, software
-//distributed under the License is distributed on an "AS IS" BASIS,
-//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//See the License for the specific language governing permissions and
-//limitations under the License.
-//
-
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +21,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class SparkClient extends Client {
@@ -59,6 +46,7 @@ public class SparkClient extends Client {
 	// class vars *************************************************************
 	
 	private static Logger logger = Logger.getLogger(SparkClient.class);
+	private static ObjectMapper objectMapper = new ObjectMapper();
 	
 	private static SparkClient instance = null;
 	
@@ -85,7 +73,7 @@ public class SparkClient extends Client {
 		super(config, defaultConnection, secureConnection);
 	}
 
-	// interface **************************************************************
+	// authentication *********************************************************
 	
 	public boolean isHybridSession()
 	{
@@ -132,15 +120,6 @@ public class SparkClient extends Client {
 		encodeParam(builder,"first_name,last_name,middle_name,friendly,id,email");
 		return builder.toString();
 	}
-
-	private void encodeParam(StringBuilder builder, String value)
-	{
-		try {
-			builder.append(URLEncoder.encode(value, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
 	
 	public String getSparkHybridOpenIdURLString()
 	{
@@ -153,17 +132,6 @@ public class SparkClient extends Client {
 	public static String getSparkOAuth2GrantString()
 	{
 		return "https://" + sparkAPIEndpoint + sparkAPIVersion + sparkOAuth2Grant;
-	}
-	
-	public static List<NameValuePair> getURLParams(String url)
-	{
-		List<NameValuePair> params = null;
-		try {
-			params = URLEncodedUtils.parse(new URI(url), "UTF-8");
-		} catch (URISyntaxException e) {
-			logger.error("malformed URL", e);
-		}
-		return params;
 	}
 	
 	public static String isHybridAuthorized(String url)
@@ -180,15 +148,6 @@ public class SparkClient extends Client {
 	       (openIdSparkCode = getParameter(params,"openid.spark.code")) != null) ? openIdSparkCode : null;
 	}
 	
-	public static String getParameter(List<NameValuePair> params, String name)
-	{
-		for(NameValuePair nameValuePair : params)
-			if(nameValuePair.getName().equals(name))
-				return nameValuePair.getValue();
-		
-		return null;
-	}
-	
 	public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkApiClientException
 	{
 		   Map<String,String> map = new HashMap<String,String>();
@@ -203,15 +162,14 @@ public class SparkClient extends Client {
 		   {
 			   HttpPost post = new HttpPost(SparkClient.getSparkOAuth2GrantString());
 			   SparkClient.initSparkHeader(post);
-			   ObjectMapper mapper = new ObjectMapper();
-			   StringEntity stringEntity = new StringEntity(mapper.writeValueAsString(map));
+			   StringEntity stringEntity = new StringEntity(objectMapper.writeValueAsString(map));
 			   stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
 			   post.setEntity(stringEntity);
 			   HttpClient httpclient = new DefaultHttpClient(); 
 			   HttpResponse response = httpclient.execute(post);
 			   String responseBody = EntityUtils.toString(response.getEntity());
 			   logger.debug("OAuth2 response>" + responseBody);
-			   sparkSession = mapper.readValue(responseBody, SparkSession.class);
+			   sparkSession = objectMapper.readValue(responseBody, SparkSession.class);
 			   setSession(sparkSession);
 		   } 
 		   catch (Exception e)
@@ -244,6 +202,52 @@ public class SparkClient extends Client {
 	}
 	
 	
+	Session authenticate() throws SparkApiClientException 
+	{
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("client_id", SparkClient.sparkClientKey);
+		map.put("client_secret", SparkClient.sparkClientSecret);
+		map.put("grant_type", "refresh_token");
+		map.put("refresh_token", getSparkSession().getRefreshToken());
+		map.put("redirect_uri", SparkClient.sparkCallbackURL);
+
+		Response response = null;
+		try {
+			response = getConnection().post(getSparkOAuth2GrantString(),objectMapper.writeValueAsString(map));
+		} catch (Exception e) {
+			throw new SparkApiClientException("Session mapping error",e);
+		}
+		List<SparkSession> sessions = response.getResults(SparkSession.class);
+		if(sessions.isEmpty()){
+			throw new SparkApiClientException("Service error.  No session returned for service authentication.");
+		}
+		Session s = sessions.get(0);
+		setSession(s);
+		return s;
+	}
+	
+	// helper methods *********************************************************
+	
+	public static List<NameValuePair> getURLParams(String url)
+	{
+		List<NameValuePair> params = null;
+		try {
+			params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+		} catch (URISyntaxException e) {
+			logger.error("malformed URL", e);
+		}
+		return params;
+	}
+	
+	public static String getParameter(List<NameValuePair> params, String name)
+	{
+		for(NameValuePair nameValuePair : params)
+			if(nameValuePair.getName().equals(name))
+				return nameValuePair.getValue();
+		
+		return null;
+	}
+	
 	public static void initSparkHeader(HttpUriRequest httpRequest) throws SparkApiClientException
 	{		
 		Map<String, String> headers = getDefaultHeaders();
@@ -271,6 +275,15 @@ public class SparkClient extends Client {
 		return headers;
 	}
 	
+	private void encodeParam(StringBuilder builder, String value)
+	{
+		try {
+			builder.append(URLEncoder.encode(value, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
 	protected String requestPath(String path, Map<String, String> params) {
 		StringBuilder b = new StringBuilder();
 		b.append("/").append(getConfig().getVersion()).append(path).append("?");
@@ -294,4 +307,8 @@ public class SparkClient extends Client {
 		((ConnectionApacheHttp)connection).setHeaders(getHeaders());
 	}
 	
+	public SparkSession getSparkSession()
+	{
+		return (SparkSession)getSession();
+	}
 }
