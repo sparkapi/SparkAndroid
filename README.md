@@ -14,6 +14,8 @@ This project includes an example Android app that makes use of `SparkAPI` object
 
 Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the [SparkAPI.java](./SparkAndroid/blob/master/src/com/sparkplatform/api/SparkAPI.java) file and set the `sparkClientKey` and `sparkClientSecret` class variables.  You must also set the `sparkAPIUserAgent` with the name of your app or your API requests will not be accepted.  The `sparkCallbackURL` can also be customized but you most likely will want to use the default value to start.
 
+Get a handle to a `SparkAPI` object via the `getInstance()` singleton static method.  If the instance has not been created, `SparkAPI` will be instantiated and returned with your configuration.
+
 ``` java
 public class SparkAPI extends Client {
 
@@ -25,6 +27,19 @@ public class SparkAPI extends Client {
 	public static final String sparkCallbackURL = "https://sparkplatform.com/oauth2/callback";
 
 	...
+	
+	public static SparkAPI getInstance()
+	{
+		if(instance == null)
+		{
+		    Configuration c = new Configuration();
+		    c.setApiKey(sparkClientKey);
+		    c.setEndpoint(sparkAPIEndpoint);
+		    c.setSsl(true);
+		    instance = new SparkAPI(c);
+		}
+		return instance;
+	}
 }
 ```
 
@@ -55,7 +70,7 @@ public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkAPICl
 public SparkSession openIdAuthenticate(String url) throws SparkAPIClientException;
 ```
 
-These authentication methods are typically placed in a `WebViewClient` object to respond to a URL request generated after the user provides their Spark credentials.  See [WebViewActivity.java](./SparkAndroid/blob/master/src/com/sparkplatform/ui/WebViewActivity.java) for an example.
+These authentication methods are typically placed in a `WebViewClient` object to respond to a URL request generated after the user provides their Spark credentials.  See [WebViewActivity.java](./src/com/sparkplatform/ui/WebViewActivity.java) for an example.
 
 
 ``` java
@@ -102,143 +117,157 @@ These authentication methods are typically placed in a `WebViewClient` object to
 
 ### Making API calls
 
-Once an authenticated `SparkAPI` object is instantiated, api methods corresponding to the four HTTP methods are available as well as general `api` method.  Similar to the authentication methods, all utilize callback blocks that receive asynchronous responses from the Spark API on success or failure.  
+Once an authenticated `SparkSession` is set, `SparkAPI` methods corresponding to the four HTTP methods can be called.  
 
-On success, the results JSON array is parsed from the Spark response object and provided as an argument to the success block.
+On success, a Spark `Response` object is returned with convenience methods to access the JSON, return code, and results array.
 
-On failure, `sparkErrorCode` and `sparkErrorMessage` are parsed from the returned JSON and provided as arguments to the failure block.
+On failure, a `SparkAPIClientException` is thrown.
 
 Session renewal is handled automatically by the `SparkAPI` object when a session token expire [error code](http://www.sparkplatform.com/docs/supporting_documentation/error_codes) is returned by the API.
 
-``` objective-c
-- (void) get:(NSString*)apiCommand
-  parameters:(NSDictionary*)parameters
-     success:(void(^)(NSArray *resultsJSON))success
-     failure:(void(^)(NSInteger sparkErrorCode,
-                      NSString* sparkErrorMessage,
-                      NSError *httpError))failure;
+``` java
+public Response get(String path, Map<ApiParameter, String> options) throws SparkAPIClientException;
 
-- (void) post:(NSString*)apiCommand
-   parameters:(NSDictionary*)parameters
-      success:(void(^)(NSArray *resultsJSON))success
-      failure:(void(^)(NSInteger sparkErrorCode,
-                       NSString* sparkErrorMessage,
-                       NSError *httpError))failure;
+public Response post(String path, String body, Map<ApiParameter, String> options) throws SparkAPIClientException;
 
-- (void) put:(NSString*)apiCommand
-  parameters:(NSDictionary*)parameters
-     success:(void(^)(NSArray *resultsJSON))success
-     failure:(void(^)(NSInteger sparkErrorCode,
-                      NSString* sparkErrorMessage,
-                      NSError *httpError))failure;
+public Response put(String path, String body, Map<ApiParameter, String> options) throws SparkAPIClientException;
 
-- (void) delete:(NSString*)apiCommand
-     parameters:(NSDictionary*)parameters
-        success:(void(^)(NSArray *resultsJSON))success
-        failure:(void(^)(NSInteger sparkErrorCode,
-                 NSString* sparkErrorMessage,
-                 NSError *httpError))failure;
-
-- (void) api:(NSString*)apiCommand
-  httpMethod:(NSString*)httpMethod
-  parameters:(NSDictionary*)parameters
-     success:(void(^)(NSArray *resultsJSON))success
-     failure:(void(^)(NSInteger sparkErrorCode,
-                      NSString* sparkErrorMessage,
-                      NSError *httpError))failure;
+public Response delete(String path, Map<ApiParameter, String> options) throws SparkAPIClientException;
 ```
 
-Below is an example API call to the `/my/account` Spark API endpoint from the example app.  On success, the table view interface is updated.  On failure, an alert view is presented to the user.
+Below is an example API call to the `/my/account` Spark API endpoint from the example app.  On response, the list view interface is updated.
 
-``` objective-c
-    [sparkAPI get:@"/my/account"
-       parameters:nil
-          success:^(NSArray *resultsJSON) {
-              if(resultsJSON && [resultsJSON count] > 0)
-              {
-                  self.myAccountJSON = [resultsJSON objectAtIndex:0];
-                  [self.tableView reloadData];
-                  [self.activityView stopAnimating];
-              }
-          }
-          failure:^(NSInteger sparkErrorCode,
-                    NSString* sparkErrorMessage,
-                    NSError *httpError) {
-              [self.activityView stopAnimating];
-              [UIHelper handleFailure:self code:sparkErrorCode message:sparkErrorMessage error:httpError];
-          }];
+``` java
+	 private class MyAccountTask extends AsyncTask<Void, Void, Response> {
+	     protected Response doInBackground(Void... v) {
+				   
+	    	 Response r = null;
+	    	 try
+	    	 {
+	    		 r = SparkAPI.getInstance().get("/my/account",null);
+	    	 }
+	    	 catch(SparkAPIClientException e)
+	    	 {
+	    		 Log.e(TAG, "/my/account exception>", e);
+	    	 }
+	    	 
+	    	 return r;
+	     }
+	     	     
+	     protected void onPostExecute(Response r) {
+	    	 JsonNode account = r.getFirstResult();
+	    	 
+	    	 if(account != null)
+	    	 {
+	    		 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+	    		 ActivityHelper.addListLine(list, "Name", account.get("Name").getTextValue());
+	    		 ActivityHelper.addListLine(list, "Office", account.get("Office").getTextValue());
+	    		 ActivityHelper.addListLine(list, "Company", account.get("Company").getTextValue());
+	    		 ActivityHelper.addArrayLine(account, "Addresses", "Address", list, "Address");
+	    		 ActivityHelper.addListLine(list, "MLS", account.get("Mls").getTextValue());
+	    		 ActivityHelper.addArrayLine(account, "Emails", "Address", list, "Email");
+	    		 ActivityHelper.addArrayLine(account, "Phones", "Number", list, "Phone");
+	    		 ActivityHelper.addArrayLine(account, "Websites", "Uri", list, "Website");
+
+	    		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
+	    				 list,
+	    				 R.layout.two_line_list_item, 
+	    				 new String[] {"line1", "line2"}, 
+	    				 new int[] {android.R.id.text1, android.R.id.text2});
+	    		 setListAdapter(adapter);
+	    	 }
+	     }
+	 }
 ```
-
-### Logging
-
-The `SparkAPI` object contains basic log level metering to control output of log messages to the console.  By default, the `logLevel` property is set to `SPARK_LOG_LEVEL_INFO` to output each API call to the console.  To output only errors to the console, call `[SparkAPI setLogLevel:SPARK_LOG_LEVEL_ERROR]`.
 
 ### Getting Started with your own App
 
-The example app provides a great starting point for building your own Spark-powered iOS app.  At a minimum, the core authentication features encapsulated by `LoginViewController` can be repurposed.
+The example app provides a great starting point for building your own Spark-powered Android app.  At a minimum, the core authentication features encapsulated by `LoginActivity` and `WebViewActivity` can be repurposed.
 
-In your `AppDelegate` `didFinishLaunchingWithOptions` method, you will need code similar to below that reads any saved tokens and bypasses Login if the session is valid to show your home `ViewController`.  If the session is not valid, the `LoginViewController` is presented.
+In your `MainActivity` `onCreate` method, you will need code similar to below that reads any saved tokens and bypasses Login if the session is valid to show your home `Activity`.  If the session is not valid, the `LoginActivity` is presented.
 
-``` objective-c
-    PDKeychainBindings *keychain = [PDKeychainBindings sharedKeychainBindings];
-    NSString* accessToken = [keychain objectForKey:SPARK_ACCESS_TOKEN];
-    NSString* refreshToken = [keychain objectForKey:SPARK_REFRESH_TOKEN];
-    NSString* openIdSparkid = [keychain objectForKey:SPARK_OPENID];
+``` java
+public class MainActivity extends Activity {
+	
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    UIViewController *vc = nil;
-    if((accessToken && refreshToken) || openIdSparkid)
-    {
-        self.sparkAPI = [[SparkAPI alloc] initWithAccessToken:accessToken
-                                                 refreshToken:refreshToken
-                                                       openId:openIdSparkid];
-        vc = [UIHelper getHomeViewController];
-    }
-    else
-    {
-        vc = [[LoginViewController alloc] initWithNibName:([UIHelper iPhone] ? @"LoginViewController" : @"LoginViewController-iPad")
-                                                   bundle:nil];
-        vc.title = @"Login";
-    }
-    
-    UIViewController *rootVC = nil;    
-    if([UIHelper iPhone])
-        rootVC = [UIHelper getNavigationController:vc];
-    else
-        rootVC = [vc isKindOfClass:[LoginViewController class]] ? vc : [UIHelper getSplitViewController];
+		Intent intent = null;
+		try
+		{
+			SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
+			String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN, null);
+			String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN, null);
+			String openIdToken = p.getString(UIConstants.AUTH_OPENID, null);
+			if(accessToken != null && refreshToken != null)
+			{
+				SparkSession session = new SparkSession();
+				session.setAccessToken(accessToken);
+				session.setRefreshToken(refreshToken);
+				SparkAPI.getInstance().setSession(session);
+				intent = new Intent(this, ViewListingsActivity.class);
+			}
+			else if(openIdToken != null)
+			{
+				SparkSession session = new SparkSession();
+				session.setOpenIdToken(openIdToken);
+				SparkAPI.getInstance().setSession(session);
+				intent = new Intent(this, MyAccountActivity.class);
+			}
+			else
+				intent = new Intent(this, LoginActivity.class);
+		}
+		catch(SparkAPIClientException e)
+		{
+			Log.e(TAG, "SparkApiClientException", e);
+		}
+		
+		startActivity(intent);
+	}
 ```
 
-In `LoginViewController`, the `processAuthentication` method should also be modified to save any session state (securely to Keychain or to Core Data) as well as redirect the user to the top `ViewController`.
+In `WebViewActivity`, the `processAuthentication` method should also be modified to save any session state (securely to SharedPreferences or other storage) as well as redirect the user to the top `Activity`.
 
-``` objective-c
-    AppDelegate *appDelegate = ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
-    appDelegate.sparkAPI = sparkAPI;
-    
-    PDKeychainBindings *keychain = [PDKeychainBindings sharedKeychainBindings];
-    if(sparkAPI.oauthAccessToken)
-        [keychain setObject:sparkAPI.oauthAccessToken forKey:SPARK_ACCESS_TOKEN];
-    if(sparkAPI.oauthRefreshToken)
-        [keychain setObject:sparkAPI.oauthRefreshToken forKey:SPARK_REFRESH_TOKEN];
+``` java
+	 private class OAuth2PostTask extends AsyncTask<String, Void, SparkSession> {
 
-    if([UIHelper iPhone])
-        [self.navigationController setViewControllers:[NSArray arrayWithObject:[UIHelper getHomeViewController]]
-                                         animated:YES];
-    else
-    {
-        AppDelegate* appDelegate = [UIHelper getAppDelegate];
-        appDelegate.window.rootViewController = [UIHelper getSplitViewController];
-    }
+		...
+	     
+	     protected void onPostExecute(SparkSession sparkSession) {	    	 
+	    	if(sparkSession != null)
+	    	{
+	    		processAuthentication(sparkSession, null);
+	    		
+	    		Intent intent = new Intent(getApplicationContext(), ViewListingsActivity.class);
+	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    		startActivity(intent);	  
+	    	}
+		 }
+	 }
+	 
+	 private void processAuthentication(SparkSession session, String url)
+	 {
+		SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
+		SharedPreferences.Editor editor = p.edit();
+		editor.putString(UIConstants.AUTH_ACCESS_TOKEN, session.getAccessToken());
+		editor.putString(UIConstants.AUTH_REFRESH_TOKEN, session.getRefreshToken());
+		editor.commit(); 
+	 }
 ```
 
 ## Dependencies
 
-* [AFNetworking 1.1](https://github.com/AFNetworking/AFNetworking)
-* [PDKeychainBindings](https://github.com/carlbrown/PDKeychainBindingsController)
-* [SBJSON 3.1](http://stig.github.com/json-framework/)
+* [Apache commons-codec](http://commons.apache.org/codec/)
+* [Apache commons-lang3](http://commons.apache.org/lang/)
+* [Apache commons-logging](http://commons.apache.org/logging/)
+* [Jackson JSON processor](http://jackson.codehaus.org/)
+* [JodaTime](http://joda-time.sourceforge.net/)
+* [log4j](http://logging.apache.org/log4j/1.2/)
 
 ## Compatibility
 
-Tested OSs: iOS 6, iOS 5
+Tested OSs: Android 4.2 Jelly Bean (Version 17)
 
-Tested XCode versions: 4.5
+Tested Eclipse versions: 3.7 Indigo
 
-Tested Devices: iPad 3, iPad 2, iPad mini, iPad 1, iPhone 5, iPhone 4
+Tested Devices: Nexus 7
