@@ -60,18 +60,13 @@ public class WebViewActivity extends Activity {
 	    
 		Intent intent = getIntent();
 		loginHybrid = intent.getBooleanExtra(UIConstants.EXTRA_LOGIN_HYBRID, true);
-		String loginURL = loginHybrid ? 
-				sparkClient.getSparkHybridOpenIdURLString() : 
-				sparkClient.getSparkOpenIdAttributeExchangeURLString();
-		
+
 		WebView webView = (WebView) findViewById(R.id.webview);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webView.setWebViewClient(new SparkWebViewClient());
-				
-		webView.loadUrl(loginURL);
-	    
-		//webView.loadUrl(SparkClient.sparkOpenIdLogoutURL);
+					    
+		webView.loadUrl(SparkClient.sparkOpenIdLogoutURL);
 	}
 
 	@Override
@@ -85,19 +80,15 @@ public class WebViewActivity extends Activity {
 	{
 		public void onPageFinished (WebView view, String url)
 		{
-			findViewById(R.id.webViewProgressBar).setVisibility(View.GONE);
-
-			/*
 			if(url.equals(SparkClient.sparkOpenIdLogoutURL))
 			{
-			    Configuration c = new Configuration();
-			    c.setApiKey("cx8re5r5jqh5w2uqbxg7aymb8");
-			    SparkClient sparkAPI = new SparkClient(c);
-			    String loginURL = sparkAPI.getSparkHybridOpenIdURLString();
-				Log.d(TAG, "loginUrl>" + loginURL);
-			    view.loadUrl(loginURL);
+				String loginURL = loginHybrid ? 
+						sparkClient.getSparkHybridOpenIdURLString() : 
+						sparkClient.getSparkOpenIdAttributeExchangeURLString();
+				view.loadUrl(loginURL);
 			}
-			*/
+			else
+				findViewById(R.id.webViewProgressBar).setVisibility(View.GONE);
 		}
 
 		public boolean shouldOverrideUrlLoading (WebView view, String url)
