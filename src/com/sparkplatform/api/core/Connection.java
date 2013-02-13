@@ -14,10 +14,12 @@
 //  limitations under the License.
 //
 
-package com.sparkplatform.api;
+package com.sparkplatform.api.core;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sparkplatform.api.SparkApiClientException;
 
 /**
  * HTTP Abstraction layer for the API.  Implementations are responsible for performing the HTTP 

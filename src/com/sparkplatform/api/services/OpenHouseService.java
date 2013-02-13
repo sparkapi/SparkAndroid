@@ -16,7 +16,7 @@
 
 package com.sparkplatform.api.services; 
 
-import com.sparkplatform.api.Client;
+import com.sparkplatform.api.core.Client;
 import com.sparkplatform.api.models.OpenHouse;
 
 public class OpenHouseService extends SubResourceService<OpenHouse> {

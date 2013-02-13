@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.sparkplatform.api.ApiParameter;
-import com.sparkplatform.api.Client;
 import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.core.ApiParameter;
+import com.sparkplatform.api.core.Client;
 import com.sparkplatform.api.models.Base;
 
 /**

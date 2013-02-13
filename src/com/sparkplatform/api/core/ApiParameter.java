@@ -14,7 +14,7 @@
 //  limitations under the License.
 //
 
-package com.sparkplatform.api;
+package com.sparkplatform.api.core;
 
 /**
  * All the documented API response codes.

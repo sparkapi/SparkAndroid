@@ -36,10 +36,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.ApiParameter;
-import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.core.ApiParameter;
+import com.sparkplatform.api.core.Response;
 import com.sparkplatform.api.models.Listing;
 
 public class ViewListingsActivity extends ListActivity implements SearchView.OnQueryTextListener {

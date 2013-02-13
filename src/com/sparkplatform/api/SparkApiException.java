@@ -16,6 +16,8 @@
 
 package com.sparkplatform.api;
 
+import com.sparkplatform.api.core.ApiCode;
+
 /**
  * Errors Specifically returned from the API
  */

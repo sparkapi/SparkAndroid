@@ -17,7 +17,7 @@
 package com.sparkplatform.api.services; 
 
 
-import com.sparkplatform.api.Client;
+import com.sparkplatform.api.core.Client;
 import com.sparkplatform.api.models.Contact;
 
 public class ContactService extends BaseService<Contact> {

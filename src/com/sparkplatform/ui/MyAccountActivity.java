@@ -33,9 +33,9 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.Response;
 import com.sparkplatform.api.SparkApiClientException;
 import com.sparkplatform.api.SparkClient;
+import com.sparkplatform.api.core.Response;
 
 public class MyAccountActivity extends ListActivity {
 	

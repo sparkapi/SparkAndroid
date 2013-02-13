@@ -14,7 +14,7 @@
 //  limitations under the License.
 //
 
-package com.sparkplatform.api;
+package com.sparkplatform.api.core;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

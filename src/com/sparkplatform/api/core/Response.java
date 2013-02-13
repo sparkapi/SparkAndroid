@@ -14,7 +14,7 @@
 //  limitations under the License.
 //
 
-package com.sparkplatform.api;
+package com.sparkplatform.api.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +23,9 @@ import java.util.List;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkApiException;
 
 
 /**

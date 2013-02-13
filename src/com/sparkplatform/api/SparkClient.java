@@ -22,6 +22,13 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.sparkplatform.api.core.Client;
+import com.sparkplatform.api.core.Configuration;
+import com.sparkplatform.api.core.Connection;
+import com.sparkplatform.api.core.ConnectionApacheHttp;
+import com.sparkplatform.api.core.Response;
+import com.sparkplatform.api.core.Session;
+
 public class SparkClient extends Client {
 
 	// configuration **********************************************************
@@ -199,7 +206,7 @@ public class SparkClient extends Client {
 	}
 	
 	
-	Session authenticate() throws SparkApiClientException 
+	protected Session authenticate() throws SparkApiClientException 
 	{
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("client_id", SparkClient.sparkClientKey);

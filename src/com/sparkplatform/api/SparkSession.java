@@ -19,6 +19,8 @@ package com.sparkplatform.api;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.sparkplatform.api.core.Session;
+
 
 @JsonIgnoreProperties({"expires_in"})
 

@@ -14,7 +14,7 @@
 //  limitations under the License.
 //
 
-package com.sparkplatform.api;
+package com.sparkplatform.api.core;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,6 +26,9 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
+
+import com.sparkplatform.api.SparkApiClientException;
+import com.sparkplatform.api.SparkApiException;
 
 /**
  * Client class for communicating with the flexmls restful interface.  Abstracts the HTTP,
@@ -124,7 +127,7 @@ public abstract class BaseClient<U> implements HttpActions<Response, U>{
 		}
 	}
 
-	Session authenticate() throws SparkApiClientException {
+	protected Session authenticate() throws SparkApiClientException {
 		StringBuffer b = new StringBuffer(config.getApiSecret());
 		b.append("ApiKey").append(config.getApiKey());
 		String signature = sign(b.toString());
