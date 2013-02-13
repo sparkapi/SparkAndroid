@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.codehaus.jackson.JsonNode;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -91,7 +92,7 @@ public class ListingFormatter {
 		if((value = standardFields.getStreetSuffix()) != null)
 			builder.append(value);
 		
-		return builder.toString();		
+		return WordUtils.capitalizeFully(builder.toString());		
 	}
 	
 	public static String getListingSubtitle(Listing listing)
