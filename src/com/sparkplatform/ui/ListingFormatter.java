@@ -69,27 +69,27 @@ public class ListingFormatter {
 		StringBuilder builder = new StringBuilder();
 		Listing.StandardFields standardFields = listing.getStandardFields();
 		String value = null;
-		if((value = standardFields.getStreetNumber()) != null)
+		if((value = standardFields.getStreetNumber()) != null && isStandardField(value))
 		{
 			builder.append(value);
 			builder.append(" ");
 		}
-		if((value = standardFields.getStreetDirPrefix()) != null)
+		if((value = standardFields.getStreetDirPrefix()) != null && isStandardField(value))
 		{
 			builder.append(value);
 			builder.append(" ");
 		}
-		if((value = standardFields.getStreetName()) != null)
+		if((value = standardFields.getStreetName()) != null && isStandardField(value))
 		{
 			builder.append(value);
 			builder.append(" ");
 		}
-		if((value = standardFields.getStreetDirSuffix()) != null)
+		if((value = standardFields.getStreetDirSuffix()) != null && isStandardField(value))
 		{
 			builder.append(value);
 			builder.append(" ");
 		}
-		if((value = standardFields.getStreetSuffix()) != null)
+		if((value = standardFields.getStreetSuffix()) != null && isStandardField(value))
 			builder.append(value);
 		
 		return WordUtils.capitalizeFully(builder.toString());		
@@ -103,9 +103,9 @@ public class ListingFormatter {
 		StringBuilder builder = new StringBuilder();
 		Listing.StandardFields standardFields = listing.getStandardFields();
 		String value = null;
-		if((value = standardFields.getCity()) != null)
+		if((value = standardFields.getCity()) != null && isStandardField(value))
 			builder.append(value);
-		if((value = standardFields.getStateOrProvince()) != null)
+		if((value = standardFields.getStateOrProvince()) != null && isStandardField(value))
 		{
 	        if(builder.length() > 0)
 	            builder.append(", ");
@@ -113,21 +113,26 @@ public class ListingFormatter {
 		}
 		if(builder.length() > 0)
 			builder.append(" - ");
-		if((value = standardFields.getBedsTotal()) != null)
+		if((value = standardFields.getBedsTotal()) != null && isStandardField(value))
 		{
 			builder.append(value);
 			builder.append("br ");
 		}
 		Double dValue = null;
-		if((dValue = standardFields.getBathsTotal()) != null)
+		if((dValue = standardFields.getBathsTotal()) != null && isStandardField(value))
 		{
 			builder.append(dValue.floatValue() - dValue.intValue() > 0 ? oneDecimalFormat.format(dValue) : dValue.intValue());
 			builder.append("ba ");
 		}
-		if((dValue = standardFields.getListPrice()) != null)
+		if((dValue = standardFields.getListPrice()) != null && isStandardField(value))
 			builder.append(formatPriceShort(dValue));
 		
 		return builder.toString();		
+	}
+	
+	public static boolean isStandardField(String value)
+	{
+	    return value != null && value.indexOf("***") == -1;
 	}
 	
 	public static String formatField(StandardField.Field field, JsonNode value)
