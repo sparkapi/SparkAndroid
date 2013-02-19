@@ -250,8 +250,8 @@ In `WebViewActivity`, the `processAuthentication` method should also be modified
 
 ## Compatibility
 
-Tested OSs: Android 4.2 Jelly Bean (Version 17)
+Tested OSs: Android 4.2 Jelly Bean (Version 17), Android 4.0 Ice Cream Sandwich (Version 14)
 
 Tested Eclipse versions: 3.7 Indigo
 
-Tested Devices: Nexus 7
+Tested Devices: Nexus 7, Nexus 4
