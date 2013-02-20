@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Level;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +35,8 @@ import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.SparkSession;
 import com.sparkplatform.api.core.Configuration;
 
+import de.mindpipe.android.logging.log4j.LogConfigurator;
+
 public class MainActivity extends Activity {
 	
 	private static final String TAG = "MainActivity";
@@ -41,14 +45,23 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	    
-		loadConfiguration();
+		configureLog4j();
+		configureSparkAPI();
 		
 		Intent intent = getMainIntent();
-		
 		startActivity(intent);
 	}
 	
-	private void loadConfiguration()
+	private void configureLog4j()
+	{
+        LogConfigurator logConfigurator = new LogConfigurator();        
+        logConfigurator.setRootLevel(Level.DEBUG);
+        logConfigurator.setLevel("com.sparkplatform", Level.INFO);
+        logConfigurator.setUseFileAppender(false);
+        logConfigurator.configure();
+	}
+	
+	private void configureSparkAPI()
 	{
 	    try
 	    {

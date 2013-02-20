@@ -16,17 +16,6 @@ Once you [register](http://www.sparkplatform.com/register/developers) as a Spark
 
 Get a handle to a `SparkAPI` object via the `getInstance()` singleton static method.  If the instance has not been created, `SparkAPI` will be instantiated and returned with your configuration.
 
-``` java
-public class SparkAPI extends Client {
-
-	// configuration **********************************************************
-	
-	public static final String sparkClientKey = "<YOUR OAUTH2 CLIENT KEY>";
-	public static final String sparkClientSecret = "<YOUR OAUTH2 CLIENT SECRET>";
-	public static final String sparkAPIUserAgent = null;
-	public static final String sparkCallbackURL = "https://sparkplatform.com/oauth2/callback";
-```
-
 ## API Examples
 
 ### Authentication
@@ -247,6 +236,7 @@ In `WebViewActivity`, the `processAuthentication` method should also be modified
 * [Jackson JSON processor](http://jackson.codehaus.org/)
 * [JodaTime](http://joda-time.sourceforge.net/)
 * [log4j](http://logging.apache.org/log4j/1.2/)
+* [android-logging-log4j](http://code.google.com/p/android-logging-log4j/)
 
 ## Compatibility
 
