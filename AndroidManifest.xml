@@ -47,7 +47,7 @@
             android:label="@string/title_activity_view_listing" >
         </activity>
         <activity
-            android:name=".SlideshowActivity"
+            android:name="com.sparkplatform.api.core.ui.SlideshowActivity"
             android:label="@string/title_activity_slideshow" >
         </activity>
     </application>
