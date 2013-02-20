@@ -7,14 +7,25 @@ This project includes an example Android app that makes use of `SparkAPI` object
 
 ## Requirements
 
-* Android 4.0 or later (API level 14 / Ice Cream Sandwich)
-* Eclipse IDE with Android SDK Tools [installed](http://developer.android.com/sdk/installing/index.html).
+* JDK 1.6+
+* [Maven 3.0.3+](http://maven.apache.org/download.html)
+* [Android SDK](http://developer.android.com/sdk/index.html) -- at least SDK Version 14 should be downloaded.
+* *Optional* Eclipse IDE with [Android Development Tools](http://developer.android.com/tools/sdk/eclipse-adt.html) and [m2eclipse](http://eclipse.org/m2e/) installed
+* App designed for devices running Android 4.0 or later (API level 14 / Ice Cream Sandwich)
 
 ## Configuration
 
 Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the [sparkapi.properties](./res/raw/sparkapi.properties) file and set the `API_KEY` and `API_SECRET` properties.  You must also set the `USER_AGENT` with the name of your app or your API requests will not be accepted.
 
+Once an Android SDK is [downloaded](http://developer.android.com/sdk/installing/adding-packages.html) to your development machine using the Android SDK tool, it must be deployed to your local maven repository using the [maven-android-sdk-deployer](https://github.com/mosabua/maven-android-sdk-deployer) and command `mvn install -P 4.0.3`.  The pom.xml is currently set to use the 4.0 SDK (Version 14) but more recent versions can also be used.
+
 Get a handle to a `SparkAPI` object via the `getInstance()` singleton static method.  If the instance has not been created, `SparkAPI` will be instantiated and returned with your configuration.
+
+## Command Line Interface
+
+To compile, install, and run on an Android device, use the target `mvn clean install android:deploy android:run`.
+
+To compile just the SparkAPI.jar without Android dependencies, use the target `mvn clean compile jar:jar`.
 
 ## API Examples
 
