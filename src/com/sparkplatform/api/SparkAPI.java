@@ -33,9 +33,6 @@ public class SparkAPI extends Client {
 
 	// configuration **********************************************************
 	
-	public static final String sparkClientKey = "<YOUR OAUTH2 CLIENT KEY>";
-	public static final String sparkClientSecret = "<YOUR OAUTH2 CLIENT SECRET>";
-	public static final String sparkAPIUserAgent = null;
 	public static final String sparkCallbackURL = "https://sparkplatform.com/oauth2/callback";
 	
 	// constants **************************************************************
@@ -43,8 +40,6 @@ public class SparkAPI extends Client {
 	public static final String sparkOpenIdLogoutURL = "https://sparkplatform.com/openid/logout";
 	
 	public static final String sparkAPILibrary = "Spark Android API 1.0";
-	public static final String sparkAPIEndpoint = "sparkapi.com";
-	public static final String sparkAPIVersion = "/v1";
 	public static final String sparkOAuth2Grant = "/oauth2/grant";
 	
 	// class vars *************************************************************
@@ -52,7 +47,8 @@ public class SparkAPI extends Client {
 	private static Logger logger = Logger.getLogger(SparkAPI.class);
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	
-	private static SparkAPI instance = null;
+	private static SparkAPI instance;
+	private static Configuration configuration;
 	
 	// class interface ********************************************************
 
@@ -60,13 +56,16 @@ public class SparkAPI extends Client {
 	{
 		if(instance == null)
 		{
-		    Configuration c = new Configuration();
-		    c.setApiKey(sparkClientKey);
-		    c.setEndpoint(sparkAPIEndpoint);
-		    c.setSsl(true);
-		    instance = new SparkAPI(c);
+			if(configuration == null)
+				configuration = Configuration.load();
+		    instance = new SparkAPI(configuration);
 		}
 		return instance;
+	}
+	
+	public static void setConfiguration(Configuration c)
+	{
+		configuration = c;
 	}
 	
 	private SparkAPI(Configuration config) {
@@ -133,9 +132,10 @@ public class SparkAPI extends Client {
 		return builder.toString();
 	}
 
-	public static String getSparkOAuth2GrantString()
+	public String getSparkOAuth2GrantString()
 	{
-		return "https://" + sparkAPIEndpoint + sparkAPIVersion + sparkOAuth2Grant;
+		Configuration c = getConfig();
+		return "https://" + c.getEndpoint()  + "/" + c.getVersion() + sparkOAuth2Grant;
 	}
 	
 	public static String isHybridAuthorized(String url)
@@ -154,34 +154,35 @@ public class SparkAPI extends Client {
 	
 	public SparkSession hybridAuthenticate(String openIdSparkCode) throws SparkAPIClientException
 	{
-		   Map<String,String> map = new HashMap<String,String>();
-		   map.put("client_id", SparkAPI.sparkClientKey);
-		   map.put("client_secret", SparkAPI.sparkClientSecret);
-		   map.put("grant_type", "authorization_code");
-		   map.put("code", openIdSparkCode);
-		   map.put("redirect_uri", SparkAPI.sparkCallbackURL);
-		   
-		   SparkSession sparkSession = null;
-		   try
-		   {
-			   HttpPost post = new HttpPost(SparkAPI.getSparkOAuth2GrantString());
-			   SparkAPI.initSparkHeader(post);
-			   StringEntity stringEntity = new StringEntity(objectMapper.writeValueAsString(map));
-			   stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
-			   post.setEntity(stringEntity);
-			   HttpClient httpclient = new DefaultHttpClient(); 
-			   HttpResponse response = httpclient.execute(post);
-			   String responseBody = EntityUtils.toString(response.getEntity());
-			   logger.debug("OAuth2 response>" + responseBody);
-			   sparkSession = objectMapper.readValue(responseBody, SparkSession.class);
-			   setSession(sparkSession);
-		   } 
-		   catch (Exception e)
-		   {
-			   logger.error("exception>", e);
-		   }
-		   
-		   return sparkSession;
+		Configuration c = getConfig();
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("client_id", c.getApiKey());
+		map.put("client_secret", c.getApiSecret());
+		map.put("grant_type", "authorization_code");
+		map.put("code", openIdSparkCode);
+		map.put("redirect_uri", SparkAPI.sparkCallbackURL);
+
+		SparkSession sparkSession = null;
+		try
+		{
+			HttpPost post = new HttpPost(getSparkOAuth2GrantString());
+			initSparkHeader(post);
+			StringEntity stringEntity = new StringEntity(objectMapper.writeValueAsString(map));
+			stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
+			post.setEntity(stringEntity);
+			HttpClient httpclient = new DefaultHttpClient(); 
+			HttpResponse response = httpclient.execute(post);
+			String responseBody = EntityUtils.toString(response.getEntity());
+			logger.debug("OAuth2 response>" + responseBody);
+			sparkSession = objectMapper.readValue(responseBody, SparkSession.class);
+			setSession(sparkSession);
+		} 
+		catch (Exception e)
+		{
+			logger.error("exception>", e);
+		}
+
+		return sparkSession;
 	}
 
 	public SparkSession openIdAuthenticate(String url) throws SparkAPIClientException
@@ -208,9 +209,10 @@ public class SparkAPI extends Client {
 	
 	protected Session authenticate() throws SparkAPIClientException 
 	{
+		Configuration c = getConfig();
 		Map<String,String> map = new HashMap<String,String>();
-		map.put("client_id", SparkAPI.sparkClientKey);
-		map.put("client_secret", SparkAPI.sparkClientSecret);
+		map.put("client_id", c.getApiKey());
+		map.put("client_secret", c.getApiSecret());
 		map.put("grant_type", "refresh_token");
 		map.put("refresh_token", getSparkSession().getRefreshToken());
 		map.put("redirect_uri", SparkAPI.sparkCallbackURL);
@@ -252,18 +254,19 @@ public class SparkAPI extends Client {
 		return null;
 	}
 	
-	public static void initSparkHeader(HttpUriRequest httpRequest) throws SparkAPIClientException
+	public void initSparkHeader(HttpUriRequest httpRequest) throws SparkAPIClientException
 	{		
 		Map<String, String> headers = getDefaultHeaders();
 		for(String key : headers.keySet())
 			httpRequest.setHeader(key,headers.get(key));
 	}
 	
-	public static Map<String,String> getDefaultHeaders() throws SparkAPIClientException
+	public Map<String,String> getDefaultHeaders() throws SparkAPIClientException
 	{
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("User-Agent", sparkAPILibrary);
-		if(sparkAPIUserAgent == null)
+		String sparkAPIUserAgent = getConfig().getUserAgent();
+		if(sparkAPIUserAgent == null || sparkAPIUserAgent.trim().length() == 0)
 			throw new SparkAPIClientException("Please set the sparkAPIUserAgent for your application!");
 		else
 			headers.put("X-SparkApi-User-Agent", sparkAPIUserAgent);

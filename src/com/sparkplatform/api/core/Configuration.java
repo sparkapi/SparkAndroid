@@ -19,6 +19,7 @@ package com.sparkplatform.api.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,7 +31,7 @@ import org.apache.log4j.Logger;
  */
 public class Configuration {
 	// default configuration file
-	private static final String PROPERTIES = "flexmls_api.properties";
+	private static final String PROPERTIES = "sparkapi.properties";
 
 	/**
 	 * Supported environment and property keys
@@ -41,16 +42,17 @@ public class Configuration {
 		API_USER,
 		ENDPOINT,
 		SSL,
-		VERSION;
+		VERSION,
+		USER_AGENT;
 	}
 	
 	private String apiSecret;
 	private String apiKey;
 	private String apiUser;
-	private String endpoint = "api.flexmls.com";
+	private String endpoint = "sparkapi.com";
 	private String version = "v1";
 	private boolean ssl;
-	private String userAgent = "flexmls API Java client";
+	private String userAgent;
 	
 	public String getApiSecret() {
 		return apiSecret;
@@ -111,10 +113,7 @@ public class Configuration {
 	public static void loadFromProperties(Configuration c){
 		loadFromProperties(c, new File(PROPERTIES));
 	}
-	/**
-	 * Load configuration from a properties file.
-	 * @return Client configuration settings
-	 */
+
 	public static void loadFromProperties(Configuration c, File f){
 		Properties properties = new Properties();
 		try {
@@ -157,6 +156,10 @@ public class Configuration {
 		if(map.containsKey(KEYS.VERSION.toString())){
 			c.setVersion(map.get(KEYS.VERSION.toString()));
 		}
+		if(map.containsKey(KEYS.USER_AGENT.toString())){
+			c.setUserAgent(map.get(KEYS.USER_AGENT.toString()));
+		}
+		
 	}
 	
 	/**

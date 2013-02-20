@@ -16,16 +16,22 @@
 
 package com.sparkplatform.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
-import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.SparkAPI;
+import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.SparkSession;
+import com.sparkplatform.api.core.Configuration;
 
 public class MainActivity extends Activity {
 	
@@ -34,7 +40,34 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+	    
+		loadConfiguration();
+		
+		Intent intent = getMainIntent();
+		
+		startActivity(intent);
+	}
+	
+	private void loadConfiguration()
+	{
+	    try
+	    {
+			Configuration c = new Configuration();
+		    Resources resources = getResources();
+		    InputStream rawResource = resources.openRawResource(R.raw.sparkapi);
+		    Properties properties = new Properties();
+	    	properties.load(rawResource);
+			Configuration.loadFromProperties(c, properties);
+			SparkAPI.setConfiguration(c);
+	    }
+	    catch(IOException e)
+	    {
+	    	Log.e(TAG, "loadConfiguration", e);
+	    }
+	}
+	
+	private Intent getMainIntent()
+	{
 		Intent intent = null;
 		
 		try
@@ -66,7 +99,7 @@ public class MainActivity extends Activity {
 			Log.e(TAG, "SparkApiClientException", e);
 		}
 		
-		startActivity(intent);
+		return intent;
 	}
 
 	@Override

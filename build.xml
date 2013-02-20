@@ -2,6 +2,6 @@
 <!-- Configuration of the Ant build system to generate a Jar file --> 
 <project name="SparkAndroid" default="CreateJar">
   <target name="CreateJar" description="Create Jar file">
-        <jar jarfile="./libs/sparkapi.jar" basedir="./bin/classes" includes="com/sparkplatform/api/**"/>
+        <jar jarfile="./sparkapi.jar" basedir="./bin/classes" includes="com/sparkplatform/api/**"/>
   </target>
 </project>
