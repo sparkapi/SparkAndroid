@@ -24,7 +24,6 @@ import org.codehaus.jackson.JsonNode;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,8 +32,8 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.SparkAPI;
+import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.core.Response;
 
 public class MyAccountActivity extends ListActivity {
@@ -67,19 +66,17 @@ public class MyAccountActivity extends ListActivity {
 		if(item.getItemId() == R.id.menu_logout)
 		{
 			// remove shared preferences
-			SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
-			SharedPreferences.Editor editor = p.edit();
-			editor.remove(UIConstants.AUTH_ACCESS_TOKEN);
-			editor.remove(UIConstants.AUTH_REFRESH_TOKEN);
-			editor.remove(UIConstants.AUTH_OPENID);
+			SecurePreferences p = new SecurePreferences(this,UIConstants.SPARK_PREFERENCES, SparkAPI.getConfiguration().getApiSecret(), false);
+			p.removeValue(UIConstants.AUTH_ACCESS_TOKEN);
+			p.removeValue(UIConstants.AUTH_REFRESH_TOKEN);
+			p.removeValue(UIConstants.AUTH_OPENID);
 			
-			editor.remove(UIConstants.PROPERTY_OPENID_ID);
-			editor.remove(UIConstants.PROPERTY_OPENID_FRIENDLY);
-			editor.remove(UIConstants.PROPERTY_OPENID_FIRST_NAME);
-			editor.remove(UIConstants.PROPERTY_OPENID_MIDDLE_NAME);
-			editor.remove(UIConstants.PROPERTY_OPENID_LAST_NAME);
-			editor.remove(UIConstants.PROPERTY_OPENID_EMAIL);
-			editor.commit();
+			p.removeValue(UIConstants.PROPERTY_OPENID_ID);
+			p.removeValue(UIConstants.PROPERTY_OPENID_FRIENDLY);
+			p.removeValue(UIConstants.PROPERTY_OPENID_FIRST_NAME);
+			p.removeValue(UIConstants.PROPERTY_OPENID_MIDDLE_NAME);
+			p.removeValue(UIConstants.PROPERTY_OPENID_LAST_NAME);
+			p.removeValue(UIConstants.PROPERTY_OPENID_EMAIL);
 			
 			// pop to login
     		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -135,15 +132,14 @@ public class MyAccountActivity extends ListActivity {
 	 
 	 private void buildOpenIDListAdapter()
 	 {
-		SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
-		 
+		SecurePreferences p = new SecurePreferences(this,UIConstants.SPARK_PREFERENCES, SparkAPI.getConfiguration().getApiSecret(), false);
 		 List<Map<String,String>> list = new ArrayList<Map<String,String>>();
-		 ActivityHelper.addListLine(list, "ID", p.getString(UIConstants.PROPERTY_OPENID_ID, null));
-		 ActivityHelper.addListLine(list, "Full Name", p.getString(UIConstants.PROPERTY_OPENID_FRIENDLY, null));
-		 ActivityHelper.addListLine(list, "First Name", p.getString(UIConstants.PROPERTY_OPENID_FIRST_NAME, null));
-		 ActivityHelper.addListLine(list, "Middle Name", p.getString(UIConstants.PROPERTY_OPENID_MIDDLE_NAME, null));
-		 ActivityHelper.addListLine(list, "Last Name", p.getString(UIConstants.PROPERTY_OPENID_LAST_NAME, null));
-		 ActivityHelper.addListLine(list, "Email", p.getString(UIConstants.PROPERTY_OPENID_EMAIL, null));
+		 ActivityHelper.addListLine(list, "ID", p.getString(UIConstants.PROPERTY_OPENID_ID));
+		 ActivityHelper.addListLine(list, "Full Name", p.getString(UIConstants.PROPERTY_OPENID_FRIENDLY));
+		 ActivityHelper.addListLine(list, "First Name", p.getString(UIConstants.PROPERTY_OPENID_FIRST_NAME));
+		 ActivityHelper.addListLine(list, "Middle Name", p.getString(UIConstants.PROPERTY_OPENID_MIDDLE_NAME));
+		 ActivityHelper.addListLine(list, "Last Name", p.getString(UIConstants.PROPERTY_OPENID_LAST_NAME));
+		 ActivityHelper.addListLine(list, "Email", p.getString(UIConstants.PROPERTY_OPENID_EMAIL));
 
 		 ListAdapter adapter = new SimpleAdapter(getApplicationContext(), 
 				 list,

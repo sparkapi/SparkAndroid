@@ -68,6 +68,11 @@ public class SparkAPI extends Client {
 		configuration = c;
 	}
 	
+	public static Configuration getConfiguration()
+	{
+		return configuration;
+	}
+	
 	private SparkAPI(Configuration config) {
 		super(config);
 	}

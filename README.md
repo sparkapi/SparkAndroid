@@ -162,16 +162,26 @@ In your `MainActivity` `onCreate` method, you will need code similar to below th
 ``` java
 public class MainActivity extends Activity {
 	
+	private static final String TAG = "MainActivity";
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		Intent intent = getMainIntent();
+		startActivity(intent);
+	}
+	
+	private Intent getMainIntent()
+	{
 		Intent intent = null;
+		
 		try
 		{
-			SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
-			String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN, null);
-			String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN, null);
-			String openIdToken = p.getString(UIConstants.AUTH_OPENID, null);
+			SecurePreferences p = new SecurePreferences(this,UIConstants.SPARK_PREFERENCES, SparkAPI.getConfiguration().getApiSecret(), false);
+			String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN);
+			String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN);
+			String openIdToken = p.getString(UIConstants.AUTH_OPENID);
 			if(accessToken != null && refreshToken != null)
 			{
 				SparkSession session = new SparkSession();
@@ -195,7 +205,7 @@ public class MainActivity extends Activity {
 			Log.e(TAG, "SparkApiClientException", e);
 		}
 		
-		startActivity(intent);
+		return intent;
 	}
 ```
 
@@ -220,11 +230,9 @@ In `WebViewActivity`, the `processAuthentication` method should also be modified
 	 
 	 private void processAuthentication(SparkSession session, String url)
 	 {
-		SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
-		SharedPreferences.Editor editor = p.edit();
-		editor.putString(UIConstants.AUTH_ACCESS_TOKEN, session.getAccessToken());
-		editor.putString(UIConstants.AUTH_REFRESH_TOKEN, session.getRefreshToken());
-		editor.commit(); 
+		SecurePreferences p = new SecurePreferences(this,UIConstants.SPARK_PREFERENCES, SparkAPI.getConfiguration().getApiSecret(), false);
+		editor.put(UIConstants.AUTH_ACCESS_TOKEN, session.getAccessToken());
+		editor.put(UIConstants.AUTH_REFRESH_TOKEN, session.getRefreshToken());
 	 }
 ```
 
@@ -237,6 +245,7 @@ In `WebViewActivity`, the `processAuthentication` method should also be modified
 * [JodaTime](http://joda-time.sourceforge.net/)
 * [log4j](http://logging.apache.org/log4j/1.2/)
 * [android-logging-log4j](http://code.google.com/p/android-logging-log4j/)
+* [SecurePreferences](https://github.com/sveinungkb/encrypted-userprefs)
 
 ## Compatibility
 

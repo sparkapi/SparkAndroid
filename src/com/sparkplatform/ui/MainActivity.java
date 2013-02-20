@@ -24,7 +24,6 @@ import org.apache.log4j.Level;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,10 +84,10 @@ public class MainActivity extends Activity {
 		
 		try
 		{
-			SharedPreferences p = getSharedPreferences(UIConstants.SPARK_PREFERENCES, MODE_PRIVATE);
-			String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN, null);
-			String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN, null);
-			String openIdToken = p.getString(UIConstants.AUTH_OPENID, null);
+			SecurePreferences p = new SecurePreferences(this,UIConstants.SPARK_PREFERENCES, SparkAPI.getConfiguration().getApiSecret(), false);
+			String accessToken = p.getString(UIConstants.AUTH_ACCESS_TOKEN);
+			String refreshToken = p.getString(UIConstants.AUTH_REFRESH_TOKEN);
+			String openIdToken = p.getString(UIConstants.AUTH_OPENID);
 			if(accessToken != null && refreshToken != null)
 			{
 				SparkSession session = new SparkSession();
