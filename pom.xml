@@ -89,6 +89,7 @@
                     <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
                     <sdk>
                         <platform>14</platform>
+                        <!--  Need to genericize -->
                         <path>/Users/dragones/Code/android-sdks</path>
                     </sdk>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
@@ -96,22 +97,30 @@
                 </configuration>
                 <extensions>true</extensions>
             </plugin>
-
-            <plugin>
-  				<groupId>org.apache.maven.plugins</groupId>
-  				<artifactId>maven-jar-plugin</artifactId>
-  				<version>2.4</version>
-  				<configuration>
-  				    <excludes>
-  				        <exclude>com/sparkplatform/ui/</exclude>
-  				        <exclude>META-INF/maven/</exclude>    
-  				    </excludes>
-  				    <finalName>SparkAPI</finalName>
-  				    <archive> 
-           				<addMavenDescriptor>false</addMavenDescriptor> 
-         			</archive> 
-			   </configuration>
- 			</plugin>
+            
+ 			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-jar-plugin</artifactId>
+		        <version>2.4</version>
+		        <executions>
+		          <execution>
+		            <phase>package</phase>
+		            <goals>
+		              <goal>jar</goal>
+		            </goals>
+		  				<configuration>
+		  				    <excludes>
+		  				        <exclude>com/sparkplatform/ui/</exclude>
+		  				        <exclude>META-INF/maven/</exclude>    
+		  				    </excludes>
+		  				    <finalName>SparkAPI</finalName>
+		  				    <archive> 
+		           				<addMavenDescriptor>false</addMavenDescriptor> 
+		         			</archive> 
+					   </configuration>
+		          </execution>
+		        </executions>
+      		</plugin>
             
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
