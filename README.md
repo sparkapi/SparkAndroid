@@ -19,11 +19,15 @@ Once you [register](http://www.sparkplatform.com/register/developers) as a Spark
 
 Once an Android SDK is [downloaded](http://developer.android.com/sdk/installing/adding-packages.html) to your development machine using the Android SDK tool, it must be deployed to your local maven repository using the [maven-android-sdk-deployer](https://github.com/mosabua/maven-android-sdk-deployer) and command `mvn install -P 4.0.3`.  The pom.xml is currently set to use the 4.0 SDK (Version 14) but more recent versions can also be used.
 
+If you want to run on a virtual device, create an Android Virtual Device (AVD) using the `android avd` [tool](http://developer.android.com/tools/devices/index.html).   
+
 Get a handle to a `SparkAPI` object via the `getInstance()` singleton static method.  If the instance has not been created, `SparkAPI` will be instantiated and returned with your configuration.
 
 ## Command Line Interface
 
-To compile, install, and run on an Android device, use the target `mvn clean install android:deploy android:run`.
+The `pom.xml` file contains the maven configuration.  You must set the sdk path to the location of your local Android SDKs.  If you want to run on an android device, make sure the `<device>usb</device>` tag is present.  Otherwise, to run on the AVD, use the `<device>emulator</device>` tag. 
+
+To compile, install, and run on an Android device, use the target `mvn clean install android:deploy android:run`.  
 
 To compile just the SparkAPI.jar without Android dependencies, use the target `mvn clean compile jar:jar`.
 

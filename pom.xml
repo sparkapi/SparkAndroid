@@ -89,9 +89,11 @@
                     <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
                     <sdk>
                         <platform>14</platform>
+                        <path>YOUR_ANDROID_SDKS_DIR</path>
                     </sdk>
+                    <device>emulator</device>
+                    <!-- <device>usb</device> -->
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                    <device>usb</device>
                 </configuration>
                 <extensions>true</extensions>
             </plugin>
