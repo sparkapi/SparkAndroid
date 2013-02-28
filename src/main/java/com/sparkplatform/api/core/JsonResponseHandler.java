@@ -66,9 +66,14 @@ public class JsonResponseHandler implements ResponseHandler<Response> {
 		Response r = new Response(mapper, rootNode);
 		r.setSuccess(rootNode.get("Success").getValueAsBoolean());
 		r.setStatus(status);
-		if(!r.isSuccess()){
-			r.setCode(rootNode.get("Code").getValueAsInt());
-			r.setMessage(rootNode.get("Message").getValueAsText());
+		if(!r.isSuccess())
+		{
+			JsonNode codeNode = rootNode.get("Code");
+			if(codeNode != null && codeNode.isInt())
+				r.setCode(codeNode.getValueAsInt());
+			JsonNode messageNode = rootNode.get("Message");
+			if(messageNode != null)
+				r.setMessage(messageNode.getValueAsText());
 		}
 		return r;		
 	}
