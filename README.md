@@ -17,7 +17,7 @@ This project includes an example Android app that makes use of `SparkAPI` object
 
 Once you [register](http://www.sparkplatform.com/register/developers) as a Spark developer and receive your Spark Client Id and Client Secret, open the [sparkapi.properties](./res/raw/sparkapi.properties) file and set the `API_KEY` and `API_SECRET` properties.  You must also set the `USER_AGENT` with the name of your app or your API requests will not be accepted.
 
-Once an Android SDK is [downloaded](http://developer.android.com/sdk/installing/adding-packages.html) to your development machine using the Android SDK tool, it must be deployed to your local maven repository using the [maven-android-sdk-deployer](https://github.com/mosabua/maven-android-sdk-deployer) and command `mvn install -P 4.0.3`.  The pom.xml is currently set to use the 4.0 SDK (Version 14) but more recent versions can also be used.
+Once an Android SDK is [downloaded](http://developer.android.com/sdk/installing/adding-packages.html) to your development machine using the Android SDK tool, it must be deployed to your local maven repository using the [maven-android-sdk-deployer](https://github.com/mosabua/maven-android-sdk-deployer) and command `mvn install -P 4.0`.  The pom.xml is currently set to use the 4.0 SDK (Version 14) but more recent versions can also be used.
 
 If you want to run on a virtual device, create an Android Virtual Device (AVD) using the `android avd` [tool](http://developer.android.com/tools/devices/index.html).   
 
