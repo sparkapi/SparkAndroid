@@ -22,6 +22,13 @@ import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.View;
+
+import com.sparkplatform.api.SparkAPIClientException;
+
 public class ActivityHelper {
 	 
 	 public static void addListLine(List<Map<String,String>> list, String key, String value)
@@ -40,5 +47,24 @@ public class ActivityHelper {
 			 JsonNode firstItem = array.get(0);
 			 addListLine(list, key, firstItem.get(itemKey).getTextValue());
 		 }
+	 }
+
+	 public static void errorDialog(String errorMessage, SparkAPIClientException exception, Context context, final View viewToHide)
+	 {
+		 StringBuilder errorBuilder = new StringBuilder();
+		 errorBuilder.append("Error: ");
+		 if(errorMessage != null)
+			 errorBuilder.append(errorMessage);
+		 if(exception != null)
+			 errorBuilder.append(exception.getClass().getName() + "- " + (exception.getMessage() != null ? exception.getMessage() : ""));
+
+		 AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		 builder.setMessage(errorBuilder.toString())
+		 .setNeutralButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+			 public void onClick(DialogInterface dialog, int id) {
+				 if(viewToHide != null)
+					 viewToHide.setVisibility(View.INVISIBLE);
+			 }
+		 }).show();
 	 }
 }

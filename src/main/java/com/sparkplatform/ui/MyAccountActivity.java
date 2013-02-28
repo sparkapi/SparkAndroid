@@ -100,12 +100,20 @@ public class MyAccountActivity extends ListActivity {
 	    	 catch(SparkAPIClientException e)
 	    	 {
 	    		 Log.e(TAG, "/my/account exception>", e);
+	    		 r = new Response(e);
 	    	 }
 	    	 
 	    	 return r;
 	     }
 	     	     
 	     protected void onPostExecute(Response r) {
+	    	 
+	    	 if(r.getException() != null)
+	    	 {
+	    		 ActivityHelper.errorDialog(null, r.getException(), MyAccountActivity.this, findViewById(R.id.myAccountProgressBar));
+	    	     return;
+	    	 }
+	    	 
 	    	 JsonNode account = r.getFirstResult();
 	    	 
 	    	 if(account != null)

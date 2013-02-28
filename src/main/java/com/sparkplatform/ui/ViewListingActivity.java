@@ -141,12 +141,19 @@ public class ViewListingActivity extends ListActivity {
 	    	 catch(SparkAPIClientException e)
 	    	 {
 	    		 Log.e(TAG, "/listings exception>", e);
+	    		 r = new Response(e);
 	    	 }
 	    	 
 	    	 return r;
 	     }
 	     
 	     protected void onPostExecute(Response r) {
+	    	 if(r.getException() != null)
+	    	 {
+	    		 ActivityHelper.errorDialog(null, r.getException(), ViewListingActivity.this, findViewById(R.id.viewListingProgressBar));
+	    	     return;
+	    	 }
+	    	 
 	    	 Log.d(TAG,"/listings>" + r.getResultsJSONString());
 	    	 
 	    	 listing = r.getFirstResult();
@@ -168,12 +175,19 @@ public class ViewListingActivity extends ListActivity {
 			 catch(SparkAPIClientException e)
 			 {
 				 Log.e(TAG, "/standardfields exception>", e);
+	    		 r = new Response(e);
 			 }
 
 			 return r;
 		 }
 
 		 protected void onPostExecute(Response r) {
+	    	 if(r.getException() != null)
+	    	 {
+	    		 ActivityHelper.errorDialog(null, r.getException(), ViewListingActivity.this, findViewById(R.id.viewListingProgressBar));
+	    	     return;
+	    	 }
+			 
 			 Log.d(TAG,"/standardfields>" + r.getResultsJSONString());
 			 
     		 try {

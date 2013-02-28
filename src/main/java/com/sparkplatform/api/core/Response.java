@@ -129,4 +129,9 @@ public class Response {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
+	public SparkAPIClientException getException()
+	{
+		return exception;
+	}
 }

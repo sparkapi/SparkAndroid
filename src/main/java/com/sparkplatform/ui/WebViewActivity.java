@@ -150,6 +150,10 @@ public class WebViewActivity extends Activity {
 	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    		startActivity(intent);	  
 	    	}
+	    	else
+	    	{
+	    		 ActivityHelper.errorDialog("OAuth2 error", null, WebViewActivity.this, findViewById(R.id.webViewProgressBar));
+	    	}
 		 }
 	 }
 	 

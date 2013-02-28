@@ -36,8 +36,8 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
-import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.SparkAPI;
+import com.sparkplatform.api.SparkAPIClientException;
 import com.sparkplatform.api.core.ApiParameter;
 import com.sparkplatform.api.core.Response;
 import com.sparkplatform.api.models.Listing;
@@ -122,12 +122,20 @@ public class ViewListingsActivity extends ListActivity implements SearchView.OnQ
 	    	 catch(SparkAPIClientException e)
 	    	 {
 	    		 Log.e(TAG, "/listings exception>", e);
+	    		 r = new Response(e);
 	    	 }
 	    	 
 	    	 return r;
 	     }
 	     
 	     protected void onPostExecute(Response r) {
+	    	 
+	    	 if(r.getException() != null)
+	    	 {
+	    		 ActivityHelper.errorDialog(null, r.getException(), ViewListingsActivity.this, findViewById(R.id.viewListingsProgressBar));
+	    	     return;
+	    	 }
+	    	 
 	    	 Log.d(TAG,r.getResultsJSONString());
 	    	 
 	    	 try {
