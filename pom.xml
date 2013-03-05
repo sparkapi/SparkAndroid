@@ -27,15 +27,11 @@
 		    <version>4.1.1.4</version>
 		</dependency>
 		
-		<!--  SparkAPI dependencies -->
-        <dependency>
-               <groupId>org.codehaus.jackson</groupId>
-               <artifactId>jackson-core-asl</artifactId>
-               <version>1.7.3</version>
-       </dependency>
+	   
+       <!-- SparkAndroid dependencies -->
        <dependency>
                <groupId>org.codehaus.jackson</groupId>
-               <artifactId>jackson-mapper-asl</artifactId>
+               <artifactId>jackson-core-asl</artifactId>
                <version>1.7.3</version>
        </dependency>
        <dependency>
@@ -43,13 +39,6 @@
                <artifactId>log4j</artifactId>
                <version>1.2.16</version>
        </dependency>
-       <dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.4</version>
-	   </dependency>
-	   
-       <!-- SparkAndroid dependencies -->
        <dependency>
   	   			<groupId>de.mindpipe.android</groupId>
   				<artifactId>android-logging-log4j</artifactId>
@@ -66,12 +55,10 @@
 	    		<version>2.1</version>
        </dependency>
        
-       <!--  JUnit -->
        <dependency>
-               <groupId>junit</groupId>
-               <artifactId>junit</artifactId>
-               <version>4.8.2</version>
-               <scope>test</scope>
+           	   	<groupId>com.sparkplatform</groupId>
+	    		<artifactId>SparkJava</artifactId>
+	    		<version>1.0</version>
        </dependency>
         
     </dependencies>
@@ -106,31 +93,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            
-            <!--  Separate JAR execution -->
-            <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-jar-plugin</artifactId>
-		        <version>2.4</version>
-		        <executions>
-		          <execution>
-		            <phase>package</phase>
-		            <goals>
-		              <goal>jar</goal>
-		            </goals>
-		  				<configuration>
-		  				    <excludes>
-		  				        <exclude>com/sparkplatform/ui/</exclude>
-		  				        <exclude>META-INF/maven/</exclude>    
-		  				    </excludes>
-		  				    <finalName>SparkAPI</finalName>
-		  				    <archive> 
-		           				<addMavenDescriptor>false</addMavenDescriptor> 
-		         			</archive> 
-					   </configuration>
-		          </execution>
-		        </executions>
-      		</plugin>
             
         </plugins>
     </build>
