@@ -142,7 +142,7 @@ public class WebViewActivity extends Activity {
 	     }
 	     
 	     protected void onPostExecute(SparkSession sparkSession) {	    	 
-	    	if(sparkSession != null)
+	    	if(!sparkSession.hasError())
 	    	{
 	    		processAuthentication(sparkSession, null);
 	    		
@@ -152,7 +152,7 @@ public class WebViewActivity extends Activity {
 	    	}
 	    	else
 	    	{
-	    		 ActivityHelper.errorDialog("OAuth2 error", null, WebViewActivity.this, findViewById(R.id.webViewProgressBar));
+	    		 ActivityHelper.errorDialog("OAuth2 error: " + sparkSession.getError(), null, WebViewActivity.this, findViewById(R.id.webViewProgressBar));
 	    	}
 		 }
 	 }
